@@ -1,0 +1,222 @@
+1. Object : Loan 
+
+   Create the fields : 
+---------------------------------------------------
+    Field Name 		DataType  	 Options
+--------------------------------------------------
+    AppliedDate		Date	
+
+    Type		PickList	Eduction
+					Housing 
+					Personal
+
+    security		PicKList	Asserts
+					Salary
+	
+    Salary		Currecy		
+
+    Applied_Amount	Currency	
+
+    Assert_Cost		Currency
+---------------------------------------------------------
+Formule 1: 
+	
+scenario : Create a formule field  to calculate the instalments
+
+	Education : 48
+	Housing   : 120
+	Personal  : 32
+
+
+	Formule : Number 
+
+		CASE( Type__c ,
+
+		    'Education', 48 ,
+
+		    'Housing',120,
+
+		    'Personal',32,
+			
+		     0
+		)
+
+-----------------------------------------------------------
+Scenario : Create a formule field to calculate intrestRate
+
+	Rule : Education : 10 %
+
+	       Housing   : 12 %
+
+               Personal  : 14 %
+
+	Formule : Percentage
+
+		CASE ( Type__c ,
+			
+			'Educaiton',0.10,
+
+			'Housing', 0.12,
+
+			'Personal',0.14,
+			0
+		)
+----------------------------------------------------------------
+IF( condition , stmt1, stmt2) 
+	If the given condition is true stmt1 will execute otherwise stmt2 will be executed.
+
+Scenario : Create a formule field  Priority  
+
+	Rule : If applied amount is more than 1,00,000 then set the priority as 'High ' otherwise 'Low'
+
+	Formule :Text
+
+	IF( Applied_Amount__c > 100000 , 'High','Low')
+
+-------------------------------------------------------------
+ISPICKVAL(PickListField ,Literal) :
+
+Scenario : Create formule field to calculate the processing fee
+
+	Loan Type  : Housing : 1000
+
+		   : other than housing : 500
+
+
+	Formule : Currency 
+
+		 IF( ISPICKVAL( Type__c,'Housing'),
+
+		      1000,
+
+		       500
+		 )
+
+-----------------------------------------------------------------
+Scenario :  Create a formule field Max_Amount  to calcualte 
+		maximum amount what bank can sanction
+
+	Security : Asserts 
+
+		  Max Amount :60 % of assertcost
+
+	Security : Salary
+
+		  Education :  32 times of 60% of your salary
+
+		  Housing   : 100 times of 60% of your salary
+
+		  Personal  : 20 times of 60% of your salary
+
+
+Formule : Currency :
+
+IF( ISPICKVAL(Security__c,'Asserts'),
+ 
+      Assert_Cost__c *0.60,
+
+     IF( ISPICKVAL(Security__c,'Salary') ,
+        
+        CASE( Type__c ,
+
+             'Education',Salary__c*0.60*32,
+
+             'Housing',Salary__c*0.60*100,
+
+            'Personal',Salary__c*0.60*20,
+
+            0
+        ), 
+
+        0
+     )
+)
+=================================================================
+
+Sceanrio : Create a formule field Sactioned Amount 
+
+	Rule : If appliedAmount is less than MaxAmount amount
+		then  Applied Amount is Sanctioned other wise 
+		maxamount is sanctioned
+
+	Formule :Currency
+
+
+IF(  Applied_Amount__c  <  Max_Amount__c ,
+         
+     Applied_Amount__c,
+
+       Max_Amount__c
+
+)
+
+-----------------------------------------------------------
+Scenario : Create a formule field EMI 
+
+	Rule :SanctionedAmount|Instalments
+
+				
+	Formule : Currency
+
+	Sanctioned_Amount__c  / Instalments__c
+
+-------------------------------------------------------------
+Date & DateTime Functions 
+
+	1. TODAY(): This will return today's date
+
+	2. Now() : Current date and time 
+
+	3. DATE(YYYY,MM,DD) :This will create instance of date
+
+		DATE(2016,2,23)
+
+	4. DAY(Date) : This will return day in the month
+	
+		DAY(TODAY()) : 24
+
+		DAY(DATE(2016,2,23)) : 23
+
+	5.MONTH(Date) : This will return month in the given date
+
+		MONTH(TODAY()) : 2
+
+		MONTH( DATE(2016,6,23)) : 6
+
+
+	6.YEAR(Date) : This will return year in the given date
+
+		YEAR(TODAY()) : 2016
+
+	7.DATEVALUE(DateTime) : This will take datetime value and
+			return date value
+
+		DATEVALUE(NOW()) : DATE(2016,2,24)
+
+
+
+Scenario : Create a formule field No_Days which will return 
+	   how many days you modified the record
+
+	  Formule : Number
+
+	  TODAY()-DATEVALUE(LastModifiedDate)
+
+-----------------------------------------------------------------
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
