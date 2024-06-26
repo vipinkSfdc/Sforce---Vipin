@@ -1,0 +1,55 @@
+
+Javascript Example 4: 
+
+<apex:page  id="page">
+    <script>
+    	function show(){
+        	var name=document.getElementById('page:fm:name').value;
+            var age=document.getElementById('page:fm:pb:pbs:age').value;
+            var branch=document.getElementById('page:fm:pb:pbs:pbsi:branch').value;	
+            document.getElementById('page:fm:pb:pbs:result').innerHTML=
+                          'Name :'+name+' :Branch :'+branch+' : Age :'+age;
+            
+        }
+    </script>
+    <apex:form id="fm">
+        <apex:inputText id="name" /> <br/> <br/> 
+        <apex:commandButton value="Submit" oncomplete="show()" />
+        <apex:pageBlock title="PageBlock" id="pb">
+            <apex:pageBlocksection id="pbs">
+            	 <apex:inputText id="age" />
+                <apex:pageBlockSectionItem id="pbsi">
+                    <apex:inputText id="branch" />
+                </apex:pageBlockSectionItem>
+                <apex:outputLabel id="result" />
+            </apex:pageBlocksection>
+        </apex:pageBlock>
+    </apex:form>
+</apex:page>
+
+-----------------------------------------------------------------------------------------------
+JavaScript Example 5: 
+<apex:page standardController="Account" recordSetVar="items" id="page">
+    <script>
+    	function show(myid){
+        	var rowId=myid.split(':');
+            var amt=document.getElementById('page:fm:pb:pbt:'+rowId[4]+':amt').value;
+            document.getElementById('page:fm:pb:pbt:'+rowId[4]+':tax').value=amt*0.10;
+        }
+    </script>
+    <apex:form id="fm">
+    	<apex:pageBlock title="PageBlock " id="pb">
+        	<apex:pageBlockTable value="{!items}" var="a" id="pbt">
+            	<apex:column >
+                    <apex:inputText id="name" value="{!a.name}" />
+                </apex:column>
+                <apex:column >
+                    <apex:inputText value="{!a.annualRevenue}" id="amt" onchange="show(this.id)"/>
+                </apex:column>
+                <apex:column>
+                    <apex:inputText id="tax"  />
+                </apex:column>
+            </apex:pageBlockTable>
+        </apex:pageBlock>
+    </apex:form>
+</apex:page>
