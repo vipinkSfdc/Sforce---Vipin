@@ -1,0 +1,125 @@
+public class StudentWrapper {
+    public String name {set;get;}
+    public String branch {set;get;}
+    public Decimal salary {set;get;}
+}
+----------------------------------------
+public class JSONExample1 {
+    public String 	dateValue {set;get;}
+    public string   stringValue {set;get;}
+    public String   objectValue {set;get;}
+    public String   sobjectValue {set;get;}
+    
+    public void show(){
+        DateTime dt=System.now();
+        dateValue=JSON.serialize(dt);
+        String name='Satish Myla';
+        stringValue=JSON.serialize(name);
+        Account acc=new Account(Name='CaptialInfo',Phone='8686864286');
+        sobjectValue=JSON.serialize(acc);
+        StudentWrapper s1=new StudentWrapper();
+        s1.name='Karthic';
+        s1.branch='SRNagar';
+        s1.salary=1000;
+        objectValue=JSON.serialize(s1);
+    }
+}
+
+VF page :
+-----------
+<apex:page controller="JSONExample1" action="{!show}">
+    <apex:pageBlock title="JSONSerialization">
+        DateTime : {!dateValue} <br/> <br/>
+        StringValue :{!stringValue} <br/><br/>
+        Sobjectvalue:{!sobjectValue} <br/><br/>
+        ObjectValue:{!objectValue}
+    </apex:pageBlock>
+</apex:page>
+
+=======================================================================
+public class JSONExample2 {
+ public String 	dateValue {set;get;}
+    public string   stringValue {set;get;}
+    public String   objectValue {set;get;}
+    public String   sobjectValue {set;get;}
+    
+    public void show(){
+        DateTime dt=System.now();
+        dateValue=JSON.serializePretty(dt);
+        String name='Satish Myla';
+        stringValue=JSON.serializePretty(name);
+        Account acc=new Account(Name='CaptialInfo',Phone='8686864286');
+        sobjectValue=JSON.serializePretty(acc);
+        StudentWrapper s1=new StudentWrapper();
+        s1.name='Karthic';
+        s1.branch='SRNagar';
+        s1.salary=1000;
+        objectValue=JSON.serializePretty(s1);
+    }
+}
+
+VF Page
+---------
+<apex:page controller="JSONExample2" action="{!show}">
+    <apex:pageBlock title="JSONSerialization">
+        DateTime : {!dateValue} <br/> <br/>
+        StringValue :{!stringValue} <br/><br/>
+        Sobjectvalue:{!sobjectValue} <br/><br/>
+        ObjectValue:{!objectValue}
+    </apex:pageBlock>
+</apex:page>
+==================================================================
+
+public class JSONExample3 {
+    public String name {set;get;}
+    public StudentWrapper sw {set;get;}
+    public Account acc {set;get;}
+    public DateTime current {set;get;}
+    public  void jsonDeserialize(){
+         String empName=JSON.serialize('Satish Myla');
+         name=(String)JSON.deserialize(empName,String.class);
+         String dateval=JSON.serialize(System.now());
+         current=(DateTime)JSON.deserialize(dateVal,DateTime.class);
+         Account a=new Account(Name='satish',Industry='Banking');
+         String accval=JSON.serializePretty(a);
+         acc=(Account)JSON.deserialize(accVal,Account.class);
+         StudentWrapper sw1=new StudentWrapper();
+         sw1.name='Satish';
+         sw1.branch='SRNagar';
+         String studentVal=JSON.serialize(sw1);
+         sw=(StudentWrapper)JSON.deserialize(studentVal,StudentWrapper.class);
+        
+    }
+}
+
+
+VF Page 
+-------
+<apex:page controller="JSONExample3" action="{!jsonDeserialize}" >
+    {!name} <br/> {!current} <br/> Accoun Name :{!acc.Name} <br/> Student Branch:{!sw.branch}
+</apex:page>
+
+===================================================================
+public class JSONExample4 {
+    public String jsonString {set;get;}
+    public StudentWrapper sw {set;get;}
+    public String name {set;get;}
+    public Integer age  {set;get;}
+    public JSONExample4(){
+        jsonString='{"name":"satish","age":31}';
+      //  sw=(StudentWrapper)JSON.deserialize(jsonString,StudentWrapper.class);
+      //  sw=(StudentWrapper)JSON.deserializeStrict(jsonString,StudentWrapper.class);
+        Map<String,Object> myRes=(Map<String,Object>)JSON.deserializeUntyped(jsonString);
+        name=(String)myRes.get('name');
+        age=(Integer)myRes.get('age');
+    }
+
+}
+
+VF Page
+----------
+<apex:page controller="JSONExample4">
+    {!sw.name} <br/>
+    Name :{!name} <br/>
+    Age :{!age}
+</apex:page>
