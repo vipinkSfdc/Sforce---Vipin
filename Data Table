@@ -1,0 +1,163 @@
+<apex:dataTable > : 
+
+ This component is used to display list of records in the vf page .
+
+	1. It can display 1000 records in the VF page
+	
+	2. This will display the data in column wise .
+
+	3. No standard salesforce look and feel and CSS is applied 
+
+Attributes :
+ 
+	1.align 	: The position of the rendered HTML table with respect to the page. Possible values include "left", "center", or "right".
+			  If left unspecified, this value defaults to "left".
+
+	2.bgcolor 	: This is text value that indicats the backgroud 
+			  color of dataTable
+
+	3.border	: This is a integer value which indicates the with
+			   of the frame border in pixels
+
+	4.captionClass  : This is the style class name which should be 
+			  applied on the capiton of dataTable
+
+	5.captionStyle	: If you want to define inline styles for the 
+			  caption we can use this attibute
+
+	6.cellpadding	: The amount of space between the border of each 
+			  table cell and its contents.
+
+	7.cellspacing	: The amount of space between the border of each 
+			  table cell and the border of the other cells surrounding it and/or the table's edge
+
+	8.columnClasses : This is the name of  the style class that is 
+			  applied on the columns of the dataTable
+
+	9.columns	: This is a integer value which indicates  no of 
+			  columns that should be displayed per row.
+
+	10.columnsWidth : This will give list of values which will specify
+			   width of every column in the row
+	
+	11.dir		: This is a text value which will specify how the
+			  content of  dataTable is displayed
+
+	12.first	: This will integer value which will specify form 
+			  which row in the list of records we have start displaying
+		
+
+	13.footerClass  : This is the name of the style class that should be 
+			  applied on the footer of the dataTable
+
+	14.frame	: The borders drawn for this table. Possible values include 
+			  "none", "above", "below", "hsides", "vsides", "lhs", "rhs", "box", and "border".
+	
+	15.headerClass  : This is the name of the style class that should be 
+			  applied on the header of the dataTable
+
+	16.rendered	: This is a boolean value  if set to true content 
+			  of the  component is displayed
+
+	17.rowClasses	: This is the name of the style class that should be 
+			  applied on the rows of the dataTable
+
+	18.rows		: This is a integer value which will indicate  how
+			  many rows should be displayed in the dataTable
+	
+	19.rules	: The borders drawn between cells in the table. 
+                          Possible values include "none", "groups", "rows", "cols", and "all". If not specified,
+
+	20.style	: If we want to apply any Inline css on the dataTable
+			  we use this 
+
+	21.styleClass	: This is the name of the style class that should be 
+			  applied on the  dataTable
+	
+	22.title	: When we keep a cursor tip on the dataTabl small
+			  pop with this name will  be displayed
+
+	23.value	: This is a object which contains the list of 
+			  records
+
+	24.var		: This is a cursor variable which will start from
+			  first record and moves till the last record
+
+	25.width	: This will specify the width of the dataTable
+
+Example :
+
+<apex:page standardController="Account" recordSetVar="items">
+    <apex:pageBlock title="DataTable">
+    	<apex:dataTable value="{!items}" var="a">
+            <apex:column value="{!a.name}" />
+            <apex:column value="{!a.industry}" />
+            <apex:column value="{!a.phone}" />
+            <apex:column value="{!a.type}" />
+        </apex:dataTable>
+    </apex:pageBlock>
+     <apex:pageBlock title="DataTable">
+    	<apex:dataTable value="{!items}" var="a" rules="cols">
+            <apex:column value="{!a.name}" />
+            <apex:column value="{!a.industry}" />
+            <apex:column value="{!a.phone}" />
+            <apex:column value="{!a.type}" />
+        </apex:dataTable>
+    </apex:pageBlock>
+     <apex:pageBlock title="DataTable">
+    	<apex:dataTable value="{!items}" var="a" rules="rows">
+            <apex:column value="{!a.name}" />
+            <apex:column value="{!a.industry}" />
+            <apex:column value="{!a.phone}" />
+            <apex:column value="{!a.type}" />
+        </apex:dataTable>
+    </apex:pageBlock>
+     <apex:pageBlock title="DataTable">
+    	<apex:dataTable value="{!items}" var="a" rules="all">
+            <apex:column value="{!a.name}" />
+            <apex:column value="{!a.industry}" />
+            <apex:column value="{!a.phone}" />
+            <apex:column value="{!a.type}" />
+        </apex:dataTable>
+    </apex:pageBlock>
+     <apex:pageBlock title="DataTable">
+    	<apex:dataTable value="{!items}" var="a" frame="box">
+            <apex:column value="{!a.name}" />
+            <apex:column value="{!a.industry}" />
+            <apex:column value="{!a.phone}" />
+            <apex:column value="{!a.type}" />
+        </apex:dataTable>
+    </apex:pageBlock>
+     <apex:pageBlock title="DataTable">
+    	<apex:dataTable value="{!items}" var="a" frame="hsides">
+            <apex:column value="{!a.name}" />
+            <apex:column value="{!a.industry}" />
+            <apex:column value="{!a.phone}" />
+            <apex:column value="{!a.type}" />
+        </apex:dataTable>
+    </apex:pageBlock>
+     <apex:pageBlock title="DataTable">
+    	<apex:dataTable value="{!items}" var="a" frame="vsides">
+            <apex:column value="{!a.name}" />
+            <apex:column value="{!a.industry}" />
+            <apex:column value="{!a.phone}" />
+            <apex:column value="{!a.type}" />
+        </apex:dataTable>
+    </apex:pageBlock>
+     <apex:pageBlock title="DataTable">
+    	<apex:dataTable value="{!items}" var="a" border="2" bgcolor="yellow">
+            <apex:column value="{!a.name}" />
+            <apex:column value="{!a.industry}" />
+            <apex:column value="{!a.phone}" />
+            <apex:column value="{!a.type}" />
+        </apex:dataTable>
+    </apex:pageBlock>
+     <apex:pageBlock title="DataTable">
+    	<apex:dataTable value="{!items}" var="a" cellpadding="10" cellspacing="20"  border="1" >
+            <apex:column value="{!a.name}" />
+            <apex:column value="{!a.industry}" />
+            <apex:column value="{!a.phone}" />
+            <apex:column value="{!a.type}" />
+        </apex:dataTable>
+    </apex:pageBlock>
+</apex:page>
