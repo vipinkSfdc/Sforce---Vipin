@@ -1,0 +1,97 @@
+Scenario 1: 
+1. Create a wrapper class  Student with 
+    	1. name
+    	2. dob
+    	3. phone
+    public class Student{
+        public String name {set;get;}
+        public Date dob	   {set;get;}
+        public String phone{set;get;}    
+    }
+2.Create a class  StudentLineItems with 
+    	1. students : List<Student>
+        2. names :  Set<String>
+        3. StudentLineItems() : In the constructor initilize the memeory for 
+            					for both list and set
+            
+        4. addStudent(name,phone,dob) : This method should add new student to the
+            					student list 
+            
+        5. getStudName() : This method should collect unique names from the 
+            			   student list 
+    
+            public class StudentLineItems{
+                public List<Student> students {set;get;}
+                public Set<string> names	 {set;get;}
+                public StudentLineItems(){
+                    students=new List<Student>();
+                    names=new Set<String>();
+                }
+                public void addStudent(String name,string phone,Date dob){
+                    Student  s1=new Student();
+                    s1.name=name;
+                    s1.phone=phone;
+                    s1.dob=dob;
+                    students.add(s1);     
+                }
+                public void getStudNames(){
+                    for(Student s:students){
+                        names.add(s.name);
+                    }
+                }
+            }
+
+Scenario 2:
+1. create a wrapper class OrderItems
+    	1. orderDate
+    	2. quantity
+    	3. price
+    	4. total
+2. create a apex class InvoiceLineItems  
+    	a.items : List<OrderItems>
+        b.billAmount :Decimal
+        c.tax	:Decimal
+   	    d.Create a constructor and intilize the items 
+            	billAmount=0
+            	tax=0
+        e. placeOrder(quantity,price) ;This method should create new orderitem
+            			and add to the items
+            		orderData=today
+            		total-quantity*price
+        f. createBill(): This method has summarize the total amount from 
+            			list of items and set it as billAmount
+            
+            public class OrderItems{
+                public Date orderDate   {set;get;}
+                public Integer quanity  {set;get;}
+                public Decimal price 	{set;get;}
+                public Decimal total	{set;get;}
+            }  
+
+		public class InvoiceLineItems{
+            public List<OrderItems> items {set;get;}
+            public Decimal billAmount 	  {set;get;}
+            public Decimal tax		      {set;get;}
+            public InvoiceLineItems(){
+                items=new List<OrderItems>();
+                billAmount=0;
+                tax=0;
+            }
+            public void placeOrder(Integer quanity,Decimal price){
+                OrderItems it=new OrderItems();
+                it.orderDate=System.today();
+                it.quanity=quantity;
+                it.price=price;
+                it.total=quanity*price;
+                items.add(it);
+            }
+            public void createBill(){
+                for(OrderItems it:items){
+                    billAmount=billAmount+it.total;
+                }
+                tax=billAmount*0.10;
+                billAmount=billAmount+tax;
+            }
+		}
+            
+            				
