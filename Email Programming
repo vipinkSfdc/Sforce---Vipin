@@ -1,0 +1,273 @@
+Email Programming:
+==================
+-When we want to send the email notifications dynamically we will use apex based 
+ Email services  
+
+-->All the classes and methods that are used to send email or to handle Inbound emails
+    are defined in Messaging Name space .
+
+-->We have 2 Types of Email Services in Salesforce
+	1. Outbound Email Services
+	2. Inbound Email services
+
+
+Outbound Emails:
+----------------
+- These are  Used to send the Emails to the users who are outside your organization .
+
+
+- We can able to send the Email Content ias PlainText or HTML format
+
+-We can also attach emailTemplates and Attachments  to the email
+
+- We have 2 ways to send the Outbound Emails.
+
+	1. Messaging.SingleEmailMessage 
+	2. Messaging.MassEmailMessage 
+
+
+
+Messaging.SingleEmailMessage:
+----------------------------
+- This class is used the send the OutboundEmails to specified user/users based on the 
+  business requirement
+
+Methods:
+
+	1. setToAddresses(List<String> emailAddress)
+		To specify the To Address in terms of String Array or List 
+		Note: The maximum allowed ToAddresses is 100.
+
+	2. setCCAddresses(List<String> emailAddress)  
+		This method is used to set  one or more CC Email Addresses.
+		Note: The maximum allowed is 25
+
+	3. setBccAddresses(<List<String> emailAddress>)
+		This method is used to set one or more BCC Email Addresses
+		Note: The maximum allowed is 25
+
+	4. setReplyTo(string)
+		To specify the Reply-To Email Address
+
+	5. setSenderDisplayName(string)
+		This method is used to set  the  Display Name of the Sender in 				email
+		Ex: "Satish Myla" 
+
+	6. setSubject(string EmailSubject)
+		This method is used to set the Subject of the email	
+
+	7. setPlainTextBody(string emailContent)
+		This method is used to set the body of the mail  in the 
+		format of plain Text Format 
+
+	8. SetHTMLBody(string emailHTMLContent) 
+		This method is used to set the body of email as html  Content 
+
+Note : if we want to send the email we have to use sendEmail(List<Email> ) method
+	defined in Messaging class .
+
+-->Messaging.SendEmail(List<SingleEmailMessageObject> emails): 
+	1.This method is defined in the Messaging namespace .
+	2.This method is used to send the singleEmailMessage |								MassEmailMessages
+
+Example :1: Create a apex class to send outbound email message with plainText and 
+    	html body
+
+public class OutboundExample {
+    public void myEmails(){
+       Messaging.SingleEmailMessage email1=new Messaging.SingleEmailMessage();
+
+        String[] toadd=new String[]{'capitalinfotraining@gmail.com'};
+
+        String[] ccadd= new String[]{'java2force@gmail.com'};
+
+        email1.setToAddresses(toadd);
+
+        email1.setCcAddresses(ccadd);
+
+        email1.setSubject('PlainTextBody');
+
+        email1.setPlainTextBody('This is a test email');
+
+        email1.setSenderDisplayName('CapitalInfoTraining');
+
+        Messaging.SingleEmailMessage email2=new Messaging.SingleEmailMessage();
+
+        email2.setToAddresses(toadd);
+
+        email2.setBccAddresses(ccadd);
+
+        email2.setSubject('HTMLBody');
+
+        email2.setHtmlBody('<h1> HaiRavi</h1><font style="color:red">This is 				html</font>');
+        Messaging.Email[] emails=new Messaging.Email[]{email1,email2};
+        Messaging.sendEmail(emails);
+    }
+}
+
+
+Q:: How to send outbound email with PDF Attachment
+	
+	1.Messaging.EmailFileAttachment : 
+	   -This is a predefined class which is used to create pdf attachment 
+		for emails
+          -EmailFileAttachment is used in SingleEmailMessage to specify attachments 				passed in as part of the Email outbound Message
+
+	Methods of EMail FileAttachment:
+	
+		1.setFileName(fileName) : 
+			This method is used to set the name of the email attachment fiel
+
+		2.setBody(Blob) :
+			 This method is used to set the body of the attachment 
+			 in the format of blob
+					
+		3.setContentType(ContentType) : 
+			This will specify the content type of the email attachment
+
+	Ex: PageReference p=Page.myPage;
+	  
+	    Blob body=p.getContentAsPDF();
+	
+	    Messaging.EmailFileAttachment eft=new Messging.EmailFileAttachment();
+	    eft.setFileName('Jan-Feb-Bill.pdf');
+	    eft.setBody(body);
+
+Example:2:create Outbound message to send email with pdf attachment 
+
+public class EmailAttachmentExample {
+    public void callEmail(){
+        Messaging.SingleEmailMessage email1=new Messaging.SingleEmailMessage();
+        email1.setToAddresses(new List<String>{'capitalinfotraining@gmail.com'});
+        email1.setSubject('File Attachment');
+        email1.setPlainTextBody('This is a test email');
+        Messaging.EmailFileAttachment eft=new Messaging.EmailFileAttachment();
+        PageReference p=Page.page1;
+        Blob body=p.getContentAsPDF();
+        eft.setBody(body);
+        eft.setFileName('Jan-Feb-Bill.pdf');
+        Messaging.EmailFileAttachment[] attach=new Messaging.EmailFileAttachment[]{eft};
+   		email1.setFileAttachments(attach);
+        Messaging.Email[] emails=new Messaging.Email[]{email1};
+        Messaging.sendEmail(emails);
+     }
+}
+	
+
+Q:: How to send EmailTemplates at a body of the email
+
+  1. Create email Template 
+	Setup
+	  |---Adminster
+		 |-------Communication Template 
+				 	|---------New Text Email
+
+	Template Name	: Testing 
+	Subject 	: Payment Confirmation
+	
+	Body 		: Dear Customer ,
+	
+			  Your Payment of {!Payment__c.Amount__c} is  received by 
+			  {!Payment__c.Mode__c} . 
+
+			  Thanks 
+	
+			  satish Myla 
+			  CapitalInfosolution
+
+
+  2. Fetch EmailTemplate id using soql
+
+	EmailTemplate et=[select id from EmailTemplate where name='Testing'];
+
+
+  3. set emailTemplate is as template id for the singleEmailMessage
+
+	Messaging.SingleEmailMessage email1=new Messaging.SingleEmailmessage();
+	email1.setTemplateId(et.id);
+
+  4. setTargetObjectId(): 
+
+	This method is used to set the userid/ContactId/LeadId to whom you want to send
+	
+			EmailTemplate 
+
+	Contact c=[select id from Contact where Phone='9999'];
+
+	email1.setTargetObjectId(c.id);
+
+ 5. etWhatId() : 
+	
+	In case if you set TargetObjectId as contact Id  then record whose data need to
+	be used in emailTemplate should be passed as whatid
+
+	Payment__c =[select id from Payment__c  limit 1];
+
+	email1.setWhatId(p.id);
+
+
+Example 3:Example to demonstate emailTempalte as a body
+ 
+public class EmailTemplateExample {
+    public void callEmails(){
+        Messaging.SingleEmailMessage email1=new Messaging.SingleEmailMessage();
+        EmailTemplate et=[select id from EmailTemplate where name='Testing'];
+        email1.setTemplateId(et.id);
+        Contact c=[select id from Contact where phone='9999'];
+        email1.setTargetObjectId(c.id);
+        Payment__c p=[select id,Mode__c,Amount__c from Payment__c limit 1];
+        email1.setWhatId(p.id);
+        Messaging.Email[] emails=new Messaging.Email[]{email1};
+        Messaging.sendEmail(emails);
+    }
+}
+
+
+
+
+
+
+Messaging.MassEmailMessage:
+---------------------------
+- This class is used to send the Bulk Email to the Salesforce users(Contacts/ users / Leads).
+
+- We can send email upto 250 users in a single instance
+- We have to add all the users ID's in the list in-order to send the Email Notification.
+
+Note: While sending the Email, We can use EmailTemplates also.
+
+Methods:
+--------
+. setTargetObjectIDs(List<ID>): We have to pass the list of users/Contacts/lead id's to send the mass emails
+	
+	2. SetEamilTemplateID(EmailTemplate ID):  We have to pass the Email Template ID, in-order to send the Email.
+
+
+Example :4:Write a apex class to send email to all the users whoes  Phone is 9999
+
+
+public class MeassEmailExample {
+    public void callMails(){
+  		Messaging.MassEmailMessage email1=new Messaging.MassEmailMessage();
+        EmailTemplate et=[select id from EmailTemplate where name='Testing'];
+        email1.setTemplateId(et.id);
+        Map<Id,Contact> contacts=new Map<Id,Contact>([select id from Contact where phone='9999']);
+        List<Id> contactId=new List<Id>(contacts.keySet());
+        email1.setTargetObjectIds(contactId);    
+        Messaging.Email[] emails=new Messaging.Email[]{email1};
+        Messaging.sendEmail(emails);
+    }
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
