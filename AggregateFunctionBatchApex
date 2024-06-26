@@ -1,0 +1,55 @@
+ public class AggWrapper {
+	 public Decimal maxValue  {set;get;}
+     public Decimal minValue  {set;get;}
+     public Decimal avgValue  {set;get;}
+     public Decimal total	 {set;get;}
+    public String industry	  {set;get;} 
+}
+----------------------------------------------------------------
+public class AggregateExample1 {
+    public AggWrapper  wrap {set;get;}
+    public List<AggWrapper> wrapList {set;get;}
+    public AggregateExample1(){
+        AggregateResult result=[select Sum(annualRevenue)total,Avg(annualRevenue)avgVal,MAX(annualRevenue)maxVal from Account];
+    	wrap=new AggWrapper();
+        wrap.total=(Decimal)result.get('total');
+        wrap.avgValue=(Decimal)result.get('avgVal');
+        wrap.maxValue=(Decimal)result.get('maxVal');
+    }
+    public void groupByIndustry(){
+      List<AggregateResult> result=[select Industry,Sum(annualRevenue)total,Avg(annualRevenue)avgVal,MAX(annualRevenue)maxVal from Account  group by Industry];  
+      wrapList=new List<AggWrapper>();
+        for(AggregateResult ag:result){
+            AggWrapper r=new AggWrapper();
+            r.industry=(String)ag.get('industry');
+            r.total=(Decimal)ag.get('total');
+            r.avgValue=(Decimal)ag.get('avgVal');
+            r.maxValue=(Decimal)ag.get('maxVal');
+            wrapList.add(r);
+        }
+    }
+}
+-----------------------------------------------------
+<apex:page controller="AggregateExample1">
+    <apex:form>
+    	<apex:pageBlock>
+            <apex:pageBlockButtons location="top">
+                <apex:commandButton value="Group By" action="{!groupByIndustry}" />
+            </apex:pageBlockButtons>
+          <apex:pageBlockSection title="AggregateResult">
+             Sum Value :{!wrap.total}  <br/>
+            Avg Value :{!wrap.avgValue} <br/>
+            Max Value :{!wrap.maxValue}
+          </apex:pageBlockSection>
+          <apex:pageBlockSection>
+          	<apex:pageBlockTable value="{!wrapList}" var="a">
+                <apex:column headerValue="Industry" value="{!a.industry}" />
+                <apex:column headerValue="Sum" value="{!a.total}" />
+                <apex:column headerValue="Avg " value="{!a.avgValue}" />
+                <apex:column headerValue="Max" value="{!a.maxValue}" />
+            </apex:pageBlockTable>  
+          </apex:pageBlockSection>
+        </apex:pageBlock>
+        
+    </apex:form>
+</apex:page>
