@@ -1,0 +1,71 @@
+public class OutboundExample {
+    public Messaging.SingleEmailMessage email1 ;
+    String[] toadd ;
+    String[] tocc;
+    string subject;
+    public OutboundExample(){
+        email1=new Messaging.SingleEmailMessage();
+        toadd=new String[]{'capitalinfotraining@gmail.com'};
+        tocc=new String[]{'onlinebatch135@gmail.com'};
+    }
+    public void plaintTextBody(){
+        email1.setToAddresses(toadd);
+        email1.setCcAddresses(tocc);
+        email1.setSubject('PlainText Body');
+        email1.setPlainTextBody('This is a text body');
+        Messaging.Email[] emails=new Messaging.Email[]{email1};
+        Messaging.sendEMail(emails);
+    }
+    public void htmlBody(){
+        email1.setToAddresses(toadd);
+        email1.setCcAddresses(tocc);
+        email1.setSubject('PlainText Body');
+        email1.setHtmlBody('<h3> Hai Satish</h3><font style="color:blue">This is test mail</font>');
+        Messaging.Email[] emails=new Messaging.Email[]{email1};
+        Messaging.sendEMail(emails);
+    }
+    public void sendAttachments(){
+        Contact c=[select id,Email from Contact where phone='9988'];
+        String[] toAdd=new String[]{c.email};
+        email1.setToAddresses(toAdd);
+        email1.setCcAddresses(tocc);
+        email1.setSubject('PlainText Body');
+        email1.setHtmlBody('<h3> Hai Satish</h3><font style="color:blue">This is test mail</font>');
+        PageReference p=Page.page1;
+        Blob body=P.getContentAsPDF(); 
+        Messaging.EmailFileAttachment attach=new Messaging.EmailFileAttachment();
+        attach.setBody(body);
+        attach.setFileName('Jan-Feb-Bill.pdf');      
+        Messaging.EmailFileAttachment[] attachments=new Messaging.EmailFileAttachment[]{attach};
+    	email1.setFileAttachments(attachments);   
+        Messaging.Email[] emails=new Messaging.Email[]{email1};
+        Messaging.sendEMail(emails);
+    /* Creating  Attachment with with email attachment    
+        Attachment at=new Attachment();
+        at.ParentId=c.id;
+        at.body=body;
+        at.Name='Jan-feb-Bill';
+        insert at;
+    */
+     }
+     public void sendTemplate(){        
+        EmailTemplate et=[select id from EmailTemplate where name='Test'];
+        email1.setTemplateId(et.id);    
+        Contact c=[select id from Contact where phone='9988'];
+        email1.setTargetObjectId(c.id);    
+        Payment__c p=[select id from Payment__c limit 1];
+        email1.setWhatId(p.id);      
+        Messaging.Email[] emails=new Messaging.Email[]{email1};
+        Messaging.sendEMail(emails);
+     }
+    public void massEmail(){
+        Messaging.MassEmailMessage email1=new Messaging.MassEmailMessage();
+      	EmailTemplate et=[select id from EmailTemplate where name='Test'];
+        email1.setTemplateId(et.id);
+        Contact c=[select id,Email from Contact where phone='9988'];
+        email1.setTargetObjectIds(new Id[]{c.id});
+        Messaging.Email[] emails=new Messaging.Email[]{email1};
+        Messaging.sendEMail(emails);
+    }
+   
+}
