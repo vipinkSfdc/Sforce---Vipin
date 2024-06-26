@@ -1,0 +1,424 @@
+Sobject :
+-------------
+All the objects what we have created to store the records are called 
+sobjects :
+
+Example : 
+
+	Account 
+	
+	Contact 
+
+	Customer__c
+	
+	Transaction__c
+
+	Opportunity
+
+	Sobject : This can store any type of sobject
+------------------------------------------------------------
+Create a records using Apex  program for sobjects 
+---------------------------------------------------------------
+	1. Account acc=new Account(name='capital',Industry='banking');
+
+	2. Contact con=new Contact(lastname='myla',firstname='satish');
+
+--------------------------------------------------------------------
+How to find sobject Type for the given instance of sobjects
+---------------------------------------------------------------------
+	
+	1. Account acc=new Account(name='Capital',Industry='Education');
+	
+	System.debug(acc); // Account :{name=capital,Industry=Education}
+
+	System.debug(acc.getSobjectType()) ; // Account
+
+	2.Contact  con=new Contact(lastname='myla',firstname='satish');
+
+	System.debug(con); // Contact :{lastname=myla firstname=satish}
+
+	System.debug(con.getSobjectType()); // contact
+
+------------------------------------------------------------------------
+Creating sobjectType
+-----------------------------------------------------------------------
+
+1. Account.SobjectType
+
+2. Contact.SobjectType
+
+3. Customer__c.SobjectType
+
+4. Transaction__c.sobjectType
+
+If we dont know what type of sobject was that 
+
+	Schema.SobjectType :This can refer any type of sobjectType
+
+---------------------------------------------------------------------
+Difference between 'Account' and Account.SobjectType
+-----------------------------------------------------------------------
+'Account' : Name of the sobject it is a string :
+
+	    This will not contain any properties of Account object
+
+
+Account.SobjectType : This is sobject Account .
+
+		This sobject will have properties
+
+		keyValue : 001
+		Label	 : Account
+		PuralNames: Accounts
+		Custom	  :false
+		Creatable : true
+		Updatable : true
+		Searchable :true
+
+------------------------------------------------------------------------
+Map<String,Schema.SobjectType>
+------------------------------------------------------------------------
+
+Map<String,Schema.SobjectType> objMap=new Map<String,Schema.SobectType>();
+
+objMap.put('Account',Account.SobjectType);
+objMap.put('Contact',Contact.SobjectType);
+
+
+------------------------------------------------------------------
+How to fetch all the sobjects from Salesforce account
+-------------------------------------------------------------------
+ Map<String,Schema.SobjectType> objMap=schema.getGlobalDescribe();
+
+ 1. It will fetch all the sobjects in the salesforce account 
+
+	and create a map;
+
+ 2. sobject Name as key and sobject as value
+
+	
+Set<String> objNames=objMap.keySet();
+
+	This will fetch all the sobject Names
+
+-----------------------------------------------------------------
+Scenario :1 
+------------------------------------------------------------------
+Fetch all the sobjects from the salesforce account and display the sobjects names as picklist options in the VF page
+
+
+Apex Class :
+
+public class SchemaExample1 {
+    public Map<String,Schema.SobjectType> objMap{set;get;}
+    public List<SelectOption> options {set;get;}
+    public String result {Set;get;}
+    public SchemaExample1(){
+        objMap=Schema.getGlobalDescribe();
+        options=new List<SelectOption>();
+        Set<String> keys=objMap.keyset();
+        List<String> objNames=new List<String>(keys);
+        objNames.sort();
+        SelectOption n=new SelectOption('none','-None-');
+        options.add(n);
+        for(String s:objNames){
+           SelectOption op=new SelectOption(s,s);
+            options.add(op);
+        }
+    }
+}
+
+VF Page:
+-------
+<apex:page controller="SchemaExample1">
+    <apex:form>
+    	<apex:pageBlock title="SchemaSobject">
+        	<apex:pageBlockSection>
+            	<apex:pageBlockSectionItem>
+                    <apex:outputLabel value="Objects" />
+                    <apex:selectList size="1">
+                        <apex:selectOptions value="{!options}" />
+                    </apex:selectList>
+                </apex:pageBlockSectionItem>
+            </apex:pageBlockSection>
+        </apex:pageBlock>
+    </apex:form>
+</apex:page>
+
+------------------------------------------------------------------------
+How to fetch properties of sobject;
+-----------------------------------------------------------------------
+
+ 1.Schema.DescribeSobjectResult result= Account.SobjectType.getDescribe();
+
+ 2.Schema.DescribeSobjectResult result=Contact.SobjectType.getDescribe();
+
+ 3. Account acc=new Account(name='capital',Industry='Banking');
+
+   Schema.DescribeSobjectResult result=acc.getSobjectType().getDescribe();
+
+ 4. Contact con=new Contact(lastname='myla',firstname='satish');
+   Schema.DescribeSobjectResult result=con.getSobjectType().getDescribe();
+
+-------------------------------------------------------------------------
+Schema.DescribeSobjectResult methods
+------------------------------------------------------------------------
+Schema.DescribeSobjectResult result=Account.SobjectType.getDescribe();
+
+1. getKeyPrefix() : This method will return three characer Id of sobject
+
+	String key=result.getKeyPrefix(); // 001
+
+2. getLabel() : This will return label name of sobject 
+
+	String labelName=result.getLabel(); // Account
+
+3.getLabelPlural() : This will return pural name of sobject
+
+	String puralName=result.getLabelPlural(); // Accounts 
+
+4.getName (): This method will return sobject Name
+
+	String objname=result.getName(); //Account
+
+5.getRecordTypeInfos() : This will return list of recordTypes that 
+		created on this on this sobject;
+
+
+List<Schema.RecordTypeInfo> records=result.getRecordTypeInfos();
+
+6.isAccessible() : This method will return true if the current user has 
+		  read access on this sobject
+
+	Boolean flag=result.isAccessible();
+
+7.isCreateable() : This will return true if the current user has create
+		 permission on his profile
+
+8.isCustom() : This method will return true sobject is custom object
+
+9.isDeletable(): This method will return true if current user has delete
+	permission on this sobject
+
+
+-----------------------------------------------------------------------
+Scenario : 2
+
+1.Create a picklist with list of all sobject names in the salesforce   account
+
+2.When user selects any one of the sobject name from the picklist it 
+  has to display all the properties of sobject
+
+-----------------------------------------------------------------------
+Apex Class :
+public class SchemaExample1 {
+    public Map<String,Schema.SobjectType> objMap{set;get;}
+    public List<SelectOption> options {set;get;}
+    public String selected	{Set;get;}
+    public SobjectResult1 result{set;get;}
+    public SchemaExample1(){
+        objMap=Schema.getGlobalDescribe();
+        options=new List<SelectOption>();
+        Set<String> keys=objMap.keyset();
+        List<String> objNames=new List<String>(keys);
+        objNames.sort();
+        SelectOption n=new SelectOption('none','-None-');
+        options.add(n);
+        for(String s:objNames){
+           SelectOption op=new SelectOption(s,s);
+            options.add(op);
+        }
+    }
+    public void getDetails(){
+        if(selected!='none'){
+            Schema.SobjectType obj=objMap.get(selected);
+            Schema.DescribeSobjectResult res=obj.getDescribe();
+            result=new SobjectResult1();
+            result.labelName=res.getLabel();
+            result.objectName=res.getName();
+            result.createAccess=res.isCreateable();
+            result.updateAccess=res.isUpdateable();
+            result.customObject=res.isCustom();
+            result.readAccess=res.isAccessible();
+        }
+    }
+    public class SobjectResult1{
+        public string labelName   {set;get;}
+        public string objectName  {set;get;}
+        public Boolean createAccess  {set;get;}
+        public Boolean updateAccess  {Set;get;}
+        public Boolean customObject {set;get;}
+        public Boolean readAccess  {set;get;}
+    }
+}
+
+VF page :
+
+<apex:page controller="SchemaExample1">
+    <apex:form>
+    	<apex:pageBlock title="SchemaSobject">
+        	<apex:pageBlockSection columns="1">
+            	<apex:pageBlockSectionItem>
+                    <apex:outputLabel value="Objects" />
+                    <apex:selectList size="1" value="{!selected}">
+                        <apex:selectOptions value="{!options}" />
+            <apex:actionSupport event="onchange" action="{!getDetails}" />
+                    </apex:selectList>
+                </apex:pageBlockSectionItem>
+                <apex:pageBlocksectionItem >
+                	<apex:outputPanel rendered="{! !ISNULL(result)}">
+                        Label Name : {!result.LabelName} <br/>
+                        Object Name: {!result.objectName} <br/>
+                        Read Access: {!result.readAccess} <br/>
+                        CreateAccess:{!result.createAccess}<br/>
+                        Update Access:{!result.updateAccess}
+                    </apex:outputPanel>
+                </apex:pageBlocksectionItem>
+            </apex:pageBlockSection>
+        </apex:pageBlock>
+    </apex:form>
+</apex:page>
+------------------------------------------------------------------------
+Fields Properties in sobject :Schema.sobjectField 
+-----------------------------------------------------------------------
+1. Name.SobjectField
+
+2. Industry.SobjectField
+
+4.AnnualRevenue.SobjectField
+
+Fields from Sobject 
+
+1. Account.Name.SobjectField
+
+2.Account.Industry.SobjectField
+
+3.Account.Type.SobjectField
+---------------------------------------------------------------------
+How to fetch all fields from given sobject :
+---------------------------------------------------------------------
+1. Schema.DescribeSobjectResult result=Account.SobjectType.getDescribe();
+
+ Map<String,Schema.SobjectField> fldMap=result.fields.getMap();
+
+2. Schema.DescribeSobjectResult result=Contact.sobjectType.getDescribe();
+
+ Map<String,Schema.sobjectField> fldMap=result.fields.getMap();
+
+----------------------------------------------------------------------
+How to fetch all the fields name of given sobject
+--------------------------------------------------------------------
+
+Schema.DescribeSobjectResult result=Account.SobjectType.getDescribe();
+
+Map<String,Schema.SobjectField> fldMap=result.fields.getMap();
+
+Set<String> fldNames=fldMap.keySet();
+
+------------------------------------------------------------------------
+
+Scenario 3: 
+
+1. Create a picklist which will display list of all sobject names as    options
+
+2. based on the sobject selected get the properties of sobject 
+
+3.Fetch all the fields of the sobject selected and create a picklist 
+  with sobject Fields names
+
+----------------------------------------------------------------------
+Apex :
+public class SchemaExample1 {
+    public Map<String,Schema.SobjectType> objMap{set;get;}
+    public Map<String,Schema.SObjectField> fldMap {Set;get;}
+    public List<SelectOption> options {set;get;}
+    public List<selectOption> fldOptions {set;get;}
+    public String selected	{Set;get;}
+    public SobjectResult1 result{set;get;}
+    public SchemaExample1(){
+        objMap=Schema.getGlobalDescribe();
+        options=new List<SelectOption>();
+        Set<String> keys=objMap.keyset();
+        List<String> objNames=new List<String>(keys);
+        objNames.sort();
+        SelectOption n=new SelectOption('none','-None-');
+        options.add(n);
+        for(String s:objNames){
+           SelectOption op=new SelectOption(s,s);
+            options.add(op);
+        }
+    }
+    public void getDetails(){
+        if(selected!='none'){
+            Schema.SobjectType obj=objMap.get(selected);
+            Schema.DescribeSobjectResult res=obj.getDescribe();
+            result=new SobjectResult1();
+            result.labelName=res.getLabel();
+            result.objectName=res.getName();
+            result.createAccess=res.isCreateable();
+            result.updateAccess=res.isUpdateable();
+            result.customObject=res.isCustom();
+            result.readAccess=res.isAccessible();
+            fldMap=res.fields.getMap();
+            fldOptions=new List<SelectOption>();
+            Set<String> keys=fldMap.keyset();
+            List<String> fldNames=new List<String>(keys);
+            fldNames.sort();
+            for(string s:fldNames){
+                SelectOption op=new SelectOption(s,s);
+                fldOptions.add(op);
+            }
+        }
+    }
+    public class SobjectResult1{
+        public string labelName   {set;get;}
+        public string objectName  {set;get;}
+        public Boolean createAccess  {set;get;}
+        public Boolean updateAccess  {Set;get;}
+        public Boolean customObject {set;get;}
+        public Boolean readAccess  {set;get;}
+    }
+}
+
+VF Page:
+----------
+<apex:page controller="SchemaExample1" sidebar="false">
+    <apex:form>
+    	<apex:pageBlock title="SchemaSobject">
+        	<apex:pageBlockSection >
+            	<apex:pageBlockSectionItem>
+                    <apex:outputLabel value="Objects" />
+                    <apex:selectList size="1" value="{!selected}">
+                        <apex:selectOptions value="{!options}" />
+           <apex:actionSupport event="onchange" action="{!getDetails}" />
+                    </apex:selectList>
+                </apex:pageBlockSectionItem>
+                <apex:pageBlocksectionItem >
+                	<apex:outputPanel rendered="{! !ISNULL(result)}">
+                        Label Name : {!result.LabelName} <br/>
+                        Object Name: {!result.objectName} <br/>
+                        Read Access: {!result.readAccess} <br/>
+                        CreateAccess:{!result.createAccess}<br/>
+                        Update Access:{!result.updateAccess}
+                    </apex:outputPanel>
+                </apex:pageBlocksectionItem>
+                <apex:pageBlockSectionItem rendered="{! !ISNULL(result)}">
+                    <apex:outputLabel value="Fields " />
+                    <apex:selectList size="1" >
+                        <apex:selectOptions value="{!fldOptions}" />
+                      
+                    </apex:selectList>
+                </apex:pageBlockSectionItem>
+            </apex:pageBlockSection>
+        </apex:pageBlock>
+    </apex:form>
+</apex:page>
+
+--------------------------------------------------------------------------
+How to fetch the properties of the fields:
+------------------------------------------------------------------------
+Schema.DescribeFieldResult
+
+
+1.Schema.DescribeFieldResult result=Account.Industry.getDescribe();
+
