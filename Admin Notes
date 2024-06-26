@@ -1,0 +1,808 @@
+Session -4 :  
+Role : Role in the organization specifies the structure/Hierarchy of the company/organization
+	:It will indicate who has to report the work to whom 
+Steps  to create a Role :
+1. Setup- Adminster Manage Users RolesNew Role
+Step 1: Role Name
+Step 2: Reports To
+Step 3: Role Name Displayed
+C::Q:: In how ways we can see the Roles 
+ANS:: List View
+	Tree View
+	Sorted List View
+I::Q:: Did you work on Territory based roles 
+-----------------------------------------------------------------------------------------------------------------
+Profiles
+Profiles: Profile Controls the following 
+1. Standarad and Custom Applications that user can access
+2. Standard or custom Tabs that user can see and Access
+3. Standard and Custom object that user can access and Specifies the Create/Read /Edit /Delete operations that user can         perform on the object
+4. Field level security in the object is controlled by profiles
+5. Apex Classes/ Visaulforce pages that user can see and Access
+
+There are two types of profiles 
+1.Standard Profiels
+2.Custom Profiles 
+Standard Profiles: These are the profiles which are created by the SalesForce to meet the global requirement and Standard CRM functionality
+Ex: System Admin
+Marketing User
+Custom Profiles: 
+These are the profiles which are created by the user to meet the organizations business requirement.
+Every Custom profiles which we create should be a clone of existing profile.
+Note: Every profile is created for a specific license and it can be assigned to the users who have purchased same license
+
+Steps to create Profiles:
+SetupAdministerManage UsersProfiles New Profile
+Step 1: Select the Existing profile
+Step 2: Select the License 
+Step 3 : Enter Profile Name 
+Step 4: Save 
+Step 5: Make the Changes based on your need.	
+
+User::
+Steps to Create a User:
+Setup AdministerManage UsersUsersNew User
+C::Q:: Which fields are mandatory  to create  a user
+1. Last Name 2.Nick Name   3.Email Id   4. User Name  5.Role   6.Profile 7. License
+C:Q:: If once the user is created can we delete him?
+ANS: No once user is created we cannot delete him
+I:Q:: What is the difference between Freeze and Deactivate 
+ANS: When you freeze the user he will not release the license he is holding 
+	When you deactivate the user  he will be releasing the license and we can assign to some other  user.
+
+
+ 	
+Q:: How to load the documents  from PC to salesforce server
+
+Applications : 
+There are two types of applications 
+1.Standard Applications
+2.Custom Applications 
+
+Standard Applications: These are the applications which are created by the salesforce to meet the global CRM requirement are said to be standard applications .
+Ex:	 Sales
+CallCenter
+Marketing 
+Custom Applications: Applications which are created by user to meet the  business requirement of his organization.
+Q:How to build the Custom Applications
+Navigation : SetupBuildCreateAppsNew App
+Step 1: Select Custom App
+Step 2: Enter Application Details 
+	App Label  : This is the Name with which application is visible to the users in the UI  
+	App Name : This is the Actual name of the application with which the application is referred programmatically.
+Step 3: Select the Logo 
+	C:Q:: What is the size of the logo
+	Ans: Max : 20KB minimum more than 3KB
+	C:Q:: What is the sugguestable width and height >
+	Ans :: Width :300 PX , Height : 55PX
+	I::Q:: What will happen if you don’t give a logo
+	Ans :: Salsforce default logo is give for your app
+Step 4: Select the tabs which you want to display in the application
+I::Q:: What is default landing tab ?
+Ans : :The tab which we selected as default landing tab that tab data will be displayed on the first page of the application
+Step 5: Select  the profiles to whom you want to display the application
+ There are two permissions 
+	Visable 		Defualt
+	Ok		NO		====Application is Readable
+	Ok		Ok		====Application is Readable  and when user logins in with this profile this 
+						Application will be opened
+	NO		NO		====Application is visible to this profile
+
+C::Q:: How many custom apps we can build ?
+Ans : This depends on the SalesForce Edition that you have purchased.
+Unlimited Edition 	: Unlimited Applications
+Enterprise 		: 10 APPS
+Developer 		: 10 APPS
+Professional		: 5 APPS
+Group Edition		: 1 APP
+Contact Manager	: 1 APP
+Personal 		: N/A
+
+Objects:   Objects are nothing but the tables in the regular database.
+	: If we want store any type of data in SalesForce that will be stored in Objects
+	: There are two types of objects in salesforce 
+		1. Standard Objects 
+		2. Custom Objects 
+
+
+1.Standard Objects :  These are the objects which are created by the SalesForce to meet the global CRM  application 
+                                   Requirement or global functional requirement .
+Ex: Account ,Contact ,Case ,Solutions 
+
+2.Custom Objects : These are the objects which are created by the user to meet the organizational business requirement
+Steps to create the Custom Object:
+Navigation : SetupBuildCreateObjectsNew Custom Object
+Step 1: Object Label : This is the name with which the object is displayed to the users
+Step 2: Pural Name : If we create a tab for this  object the name that should be displayed on the tab is called Pural Name
+Step3: Object Name : This is the actual name of the object
+Step 4: Description : We can give the basic information about what   type of data is stored in the object
+Step 5: Context Sensitive help:  On every page we have help lint provided by the SalesForce, when you click help which help page should open .
+	1.Standard help& Training window provided by the salesforce 
+			Or
+	2.Visualforce page which you have created 
+
+Step 6: Every Object that we create in the salesforce will have one field with Field  Name “ Name” which was created by salesforce .
+This Name field allows following Data types
+1.Auto Number 
+2.Text 
+AutoNumber : System will autogenerate the no based on the format what we have given
+Ex : EID-{0000}
+	Staring with : 1  
+	EID-0001
+	EID-0002
+Text : If we select text user has to enter the data 
+Note: Name field is a required field 
+Optional Features: These features can be enabled or disabled at any stage of the application. There are three optional features 
+1.	Allow Reports: If we want to create reports on this object this feature should be enabled, Once you enable it SalesForce will create default report type on this object.
+2.	Allow Activities:  If we want to create task or event on this object then this feature need to enabled.
+3.	Track Field History : This will track the field info  like  when it is modified and who has modified 
+
+Deployment Status:
+1.	In Development :  If we select the status as in Development this object is not ready for access and only System Admin can access
+2.	Deployed    : This object is ready for access every once can perform DML operations based on their permissions.
+
+One Time Object Creation Options: These options are available only at the time of creating a object, Once object  is created we cannot enable or disable these options .There are such options 
+1.	Add Notes and Attachments:  When we enable this option we will have Notes and Attachment related list in the detail page of the object where we can attach corresponding documents to the records.
+2.	Create Custom Tab on Object Creation: If we enable this option once object is successfully created immediately it takes you to the tab creation Page.
+
+Note :All the custom object are appended with __c , 
+Ex: Customer__c
+
+Tabs: Tabs are the interface between the user and Object/  Webpage / Visual force Page
+There are three types of tabs 
+1.	Custom Object Tab
+2.	Web Tab
+3.	Visual force Page Tab
+Custom Object Tab : If the user wants perform any Read/ Create/ Edit /Deletion operation on the object he needs an interface to open the object  that interface is  Tab. When  you click on this tab corresponding object will open and we perform the  operation on it .
+Steps  to Create the Custom object Tab:
+Navigation : SetupBuildCreateTabsNew Custom Object Tab
+Step 1: Select the object and style 
+Step 2: Select the visibility of the tab to the profiles .There are  three permissions 
+1.	Tab Hidden :  If you select this option ,tab is not visible to the  users with this profiles
+2.	Default On : If  we select this option, tab  is visible the users with this profile and tab is displayed on the tab panel
+3.	Default off : If we select this option  ,tab is visible to the users with this profile but tab is not added on the tab panel
+
+Step 3: Select the applications in which you want the tab to included  
+
+
+Fields: Fields are nothing   but columns in the tables 
+There are  two  types of columns 
+1.Standard Fields
+2.Custom Fields 
+Standard Fields : These are the fields which are  created by the salesforce for every object.
+1.Created By : Once record is created ,Those records remains on my name irrespective of whether  user is active or inactive
+2.LastMofied by
+3.Owner  : Every record in the salesforce have owner ,Has is responsible for handling business with this record.
+4.Name : 
+
+Field Name		Field Label		Data Type		Modifications
+Owner			Owner			Lookup(User,Queue) 	No
+Name			Any Thing 		AutoNumber ,Text 	Label Name ,DataType
+Created by		Createdby		Lookup(User)		No
+LastModified By		LastModifiedBy		Lookup(User)		No
+
+
+
+
+Custom Fields: These are the fields which are created by the user to meet the business requirement of the organization
+Technical Terms 
+1.Field Label
+2.Field Name
+3.Required
+4.Length
+5.Unique 
+6.Case Sensitive
+7.Default Value
+8.Field Level security
+9.PageLayouts
+10.Data Types
+Field Label : This is the name with which this field is displayed to the users  in the UI(User Interface)
+Field Name :This is the actual name with which we have created the field  in the  object and we use this name to refer to this field programmatically 
+Required: If we select required check box we can’t leave this field empty.
+Length : This will indicate the size of the data 
+5.Unique : When we select unique duplicate values are not allowed 
+6.Case sensitive : if case you want to consider the caps and small  different then select case sensitive
+7.Default : This value will be displayed in the field whenever the field is loaded in the page 
+8.Field Level Security :
+Profile 	Visable	ReadOnly	
+SystemAdmin	OK	NO	All the users with admin profile can read/write the field 
+System Admin	OK	OK	All the users with admin profile can only read the field
+System Admin	NO	NO	All the users with admin profile cannot see this field
+System Admin	NO	OK	This combination is not allowed
+
+
+Data Type :  This   will indicate the type of data data that we can enter in the field and  range of the data.
+1.	Text 	:  
+	Data Format 		:  Alpha Numeric 
+	Maximum Length	: 255 Characters
+	Single/Multiple Lines 	: Single Line 
+3.	Text Area :
+	Data Format 		: Alpha Numeric
+	Maximum Length	: 255 Characters
+	Single /Multiple Lines 	: Multiple Lines
+4.	Text  Area (Long) 
+	Data Format 		:Alpha Numeric
+	Maximum Length	: 32768 ( it can grow upto 1,30000+ )
+	Single /Multiple Line   	: Multiple Line
+	Minimum Length	: 256 characters
+5.	Text Area (Rich)
+	Data Format 		: Formatted Data
+	Maximum Length 	: 32768 (it can grow 1, 30,000+)
+	Single /Multiple Lines 	: Multiple Lines
+	Minimum lines 		: 10 lines 
+
+Steps to create a text field  :
+Navigation : SetupBuildCreateObjectsObject name Custom fields &realtions  New 
+Step 1:  Select the data Type 
+	Ex: Text 
+Step 2: Enter the field Details 
+	Ex:  
+	Field Label : Customer Name
+	Field Name 	:Customer_Name
+	Length       	: 90
+	Description 	: This is the name of the primary customer
+	Help 	      	 : Name should start with caps
+	Required    	:  No
+	Unique 	    	: No
+	External Id	: NO
+	Default value	 : Blank
+Step 3: 
+	Select the field level security for every profile for the new field which you are creating 
+Step 4: 
+	Add the field to the page Layout 
+
+Text Encrypted  :
+	Data Format : alpha numeric
+	Length 	         : 176 characters
+	View 	        : only the users with view Encrypted view will be able to see this field
+		       :   It supports inline edit
+
+	We cannot use  encrypted fields  in search, formless, Conditions 
+	We can display the encrypted fields in search results
+	By default no one will have view encrypted fields permission 
+	
+CQ: :  Which statement is TRUE about Encrypted Custom Fields? Choose 3 answers: 
+              A. Encrypted fields can be included in search results. 
+              B. Encrypted fields are not available for validation rules or Apex scripts. 
+              C. Encrypted fields can be included in report results. 
+              D. Encrypted fields are not available in filters for list views, reports, and roll up summary fields
+
+
+
+
+
+C:Q:: Which standard profile can view encrypted fields by default? 
+          A. system Admin 
+          B. standard user profile 
+          C. None by default
+          D: Marketing Profile
+
+Currency :  Length of Integer and Decimal together it should not be more than 18 digits
+
+	Ex: 88888.00
+
+
+Pick List : This is a dropdown list 
+
+	It allows 1000 options in the pick list
+	Maximum length of each option is 255 characters
+	All the options together it can be maximum 15,000 characters
+	We can sort the options before we display in the pick list
+	In case we want we set the first option as default  
+	Once the pick list field is created we can add/ remove /replace /edit the options 
+C:Q:: We have 10 records with city  ‘Hyd’ and Admin has removed the option of  ‘Hyd ‘  from the city pick list field What would be behavior 
+
+
+Ans: Old records which have selected ‘Hyd’ still can select ‘Hyd ‘ 
+
+MultiSelect  PickList :  This is just like a picklist where we can select more than one option at a time .
+	
+	It can have 150 options
+	We can select 100 options at  a time
+	Maximum length of each option is 40 characters
+	Maximum length of all the options together 1500 characters
+
+Field Dependency : When  value of  one field controls the value of another field we call it a field dependency
+
+Controlling Field :  it can be any of the PICKLIST field or CHECKBOX field
+Dependent Field : It can be any of the  PICKLIST field or  MULTI SELECT PICKLIST field
+
+C:Q:: Which statement is true about the field dependency 
+ ANS:::if the controlling field is a picklist  field it can not have more than 300 options in  it 
+
+C::Q:: Which  of the following statements  are true about field dependency
+
+1.	 Standard field as controlling and Custom Field as Dependent
+2.	Standard field as Controlling and Standard field as Dependent
+3.	Custom field as Controlling and Custom field as Dependent
+4.	Custom Field as controlling and Standard field as Dependent
+
+Relations:
+
+These are used to create /establish a relation between two or more objects
+
+1. Master-Detail Relation
+
+2. Lookup Relation
+3. Junction Object(Many to Many)
+
+4. Hierarchal Relation
+
+
+Master-Detail Relation 
+
+1.	 Maser –Detail Relation is One to Many relation 
+2.	This field can be created only on the object which doesn’t have any prior data on it .
+3.	This is a required field .
+4.	The object on which we have created master –Detail that object is called Detail Object /Child Object /Related Object
+5.	 The object   to whose record the master –Detail field is referring that object is called Master Object 
+6.	The Object on which we have created Maser-Detail field that object will not have owner field.
+7.	The owner of master record will be the owner of the record.
+8.	If  you delete the master  record child records are also deleted .
+9.	The Child records which are deleted due to deletion of master record will not move recycle bin, But when we undelete the master  record child  record will be automatically undeleted 
+10.	An object can be master to any no of objects
+
+1.	A			2		A		3.		A
+|					|				|
+		       B				   ------------------		-----------------------------
+						|	|	|		|	|	|	|
+							B	C	D		B	C	D	E
+
+			Allowed			Allowed			Allowed
+	
+11.	An object can have only two master ‘ field on it 
+
+1.	 A		2 .  A       B		3.    A	B	C
+ |		      |        |		       |       |	|
+B		     --------		   --------------------
+		        |			           |
+		        C    			          D
+
+Allowed	Allowed		Not allowed
+
+12.	 Child Object can be Parent to some other object up to three levels
+
+1.	 A		2.	A		3. 	A	 4.	A
+ |		    	|			|		|
+B			B			B		B
+|			|			|		
+C			C			C		
+			|			|		
+			D			D		
+						|
+						E
+
+Allowed			Allowed		Not Allowed	Allowed
+
+
+13.	Object which has two parents on  it can never be a parent to some other object
+
+A		x			A	X
+|		|			|	|
+			--------------------			B	Y
+				|				|	|
+				C				C	Z
+				|				|	|
+				D				-----------
+								      |
+								      D
+
+
+		Not Allowed					Allowed
+
+Steps to Create a Master –detail field 
+
+Navigation: SetupBuildCreateObjectsSelect Object-Custom fields& RelationsNew 
+
+Step1: Select Data Type as Master-details
+
+Step 2: Select Master Object
+
+Step 3:  Enter Field Details 
+	
+	1. Field Label	: Customer Details
+	
+	2. Field Name   : Customer Details 
+
+	3. Sharing Settings : Select the Minimum level of access requied on Master object to perform 
+				Read /Edit/Delete /Create on child records
+
+Step 4: Establish the field level security
+
+Step 5:  Add the field to the Child object default   page layout
+
+Step 6:  Add the field to the parent object Page Layouts
+ 
+
+Junction Object :  Object on which we have two master –detail fields on it that we call it as  junction  object.
+		
+	1. This junction object will maintain many to many relation 
+2. The first master –detail field that we have created will be primary master 
+	3. The second master –detail field that we have created will be secondary master
+	4. Junction object will inherit   look and feel and owner ship properties from primary master 
+	5. Junction object related records are displayed in both the masters
+	6. If junction object has more than 200 child records for particular master record then we cannot   
+                  delete   that master record.
+
+
+
+
+
+
+
+Lookup Relation: 
+1.	It also maintains  One to Many relation
+2.	This is  not a required field 
+3.	We can create a lookup field on the object which has data also
+4.	If delete the parent record corresponding child records are not deleted.
+5.	We can avoid deletion of parent record if  it has child 
+6.	Owner for the  parent record and child record can be same or different
+7.	We can create 25 lookup fields in a object 
+8.	We can create a self lookup relation  .
+
+Hierarchical Relation:
+	1. This relation is created on user object.
+	2. This is used to establish the relation between two users .
+
+Certification Questions  on Realtions (401 &201) :
+1.What is the maximum number of master-detail relationships that can be created on a custom object? 
+ 
+A) 1
+B) 2
+C) 4
+D) Unlimited
+
+2. A developer has created a junction object. What is the significance of the first master-detail (primary)  relationship? 
+    
+A)Look and feel, the junction object's detail and edit pages use the color and any associated icon of  the primary master object.
+B) You cannot delete the primary relationship.
+C) You cannot rename the primary relationship.
+D) There is no significance
+
+3. Which of the following is NOT a step in creating a junction object?
+ 
+A) Creating the custom object to serve as the junction object between the two master objects
+B) Creating two master-detail relationships
+C) Customizing the related lists on the page layouts of the two master objects
+D) Creating two lookup relationships
+
+
+4. An organization wants to leverage custom objects to track bugs. The organization wants the ability to relate bugs to parent bugs in a parent-child relationship. What type of relationship should be used? 
+
+A) master-detail
+B) self
+C) hierarchical
+D) many-to-many
+B
+
+5. A developer wants to leverage the console view to see the parent object of the child object in focus on the console. How would a developer specify what related list fields are displayed on the parent object? 
+
+A) On the child object's mini-page layout
+B) On the parent object's mini-page layout related lists field selection
+C) On the parent object's page layout related lists field selection
+D) You cannot modify the related fields on the console view
+
+
+	6.If a parent object has a lookup relationship defined with a child object, what happens to the child object when you delete a record from the parent?
+A.	The child record is deleted
+B.	Nothing
+C.	The parent record cannot be deleted
+D.	The child record cannot be deleted
+
+
+
+
+7.in a master-child relationship between a standard object and custom object which of the following statements is NOT true? Please select two (2) items.
+A.	The standard object is always the master
+B.	The custom object is always the master
+C.	The custom object is always a child
+D.	The standard or custom object can be a master
+E.	The standard object is never a child
+
+8. 	An organization wants to create a field to store manager data on the user object. The manager field is a reference to another user record. What type of relationship should be used?
+A.	Master-Detail
+B.	Hierarchical
+C.	Lookup
+D.	Many-to-many
+	
+
+ 	09.In a recruiting application, salary is a child object to a parent position object via a Master-Detail relationship The min pay and max pay fields of salary object cannot be modified when the Position status on the parent is 'Approve'. How would a developer design this?
+A.	Create a Visualforce component on the position detail page
+B.	Rollup-summary field
+C.	Validation rule on position object
+D.	Formula field on the salary object
+E.	Validation rule on the salary object
+
+11.What is true about a junction object?
+A.	A custom object that has two Master-Detail relationships
+B.	A custom object that has a Master-Detail relationship
+C.	A standard object that has two Master-Detail relationships
+D.	A standard object that has a Master-Detail relationship
+	
+	
+
+ 	12.Object X has a lookup to object Y. Which of the following statements are TRUE? Please choose two (2).
+A.	Fields of both X and Y are accessible from object Y
+B.	Fields of object Y can be accessed from object X
+C.	Fields of both Y and X are accessible from object X
+D.	Fields of object X can be accessed from object Y
+
+
+13.In a Master-Detail relationship, what happens when the a record is deleted from the parent object?
+A.	Parent record alone gets deleted
+B.	Exception occurs
+C.	Parent and child record will not be deleted
+D.	All child records are deleted
+
+14.. 	What is a junction object?
+A.	Object with lookup relationship
+B.	Master detail relationship
+C.	Object with two lookup relationships
+D.	Object with two Master-Detail relationships
+	
+
+15.What is true about a master-detail relationship? Please select two (2) choices.
+A. When the parent record has been deleted, all the child records will be deleted.
+B. You can have a child record without the parent record.
+C. You have to expose the master lookup field on the child detail page layout.
+D. You cannot delete a child record
+16.  Roll up Summary Field works in the case of which relationship Select the correct choice
+A. Master Detail
+B. Master Master
+C. Workflow
+D. Validation Rules
+E. Lookup
+F. Do not lookup
+G. Master to all
+
+Roll up Summary : 
+1.This field can be created only on master object ( in the master –detail relation )
+2. Value of this field is calculated from the corresponding child records
+Ex: 
+Customer					Transaction	
+CustomerId	Name	AccountType
+CID-001	Sam	Saving
+CID-002	Ram	Current
+TransactioId	CDetails	Type	Amount
+T-01	CID-001	Dep	10000
+T-02	CID-001	Dep	20000
+T-03	CID-002	Dep	20000
+T-04	CID-001	Wit	20000
+T-05	CID-002	Wit	50000
+Customer and Transaction has realtion of master-Detail where Customer is a master and Transaction is  a detail object
+
+1.Where can we create a rollup summary   field in above context : Customer Object
+Roll up summary field  value is compute by any one of the operations
+	1.Count : This gives the  no of child record for a given master record .
+		  (The Records which are participating in the relation)
+Ex: CID-001------Sam-----Saving 
+		|------T-01----Dep---10000
+		|-----T-02----Dep----20000
+		|----T-04----With----20000
+Count :  3  
+Note : If we say include only the Transaction type :Dep in the Rollup then  will be 2
+	2.Sum : This will  return us summarized value of given field from the child object.
+		:We can choose any one of the Percentage ,Number ,Currency field from the child object.
+	 Ex: CID-001------Sam-----Saving 
+		|------T-01----Dep---10000
+		|-----T-02----Dep----20000
+		|----T-04----With----20000
+Sum (Amount ) :  50000
+	Note : If  we give a filter saying only those records whose transaction type is Dep to participate in the  
+                              Rollup Summary then Sum will return :30000
+
+	3.Min : This wil return the minimum value from the given field of the Child object.
+		:Field can be any one of the  (Number ,Percentage,Currency, Data,DataTime)
+Ex: CID-001------Sam-----Saving 
+			|------T-01----Dep---10000
+			|-----T-02----Dep----20000
+			|----T-04----With----20000
+	Min( Amount ) : 10000
+4.Max : This wil return the maximum value from the given field of the Child object.
+		:Field can be any one of the  (Number ,Percentage,Currency, Data,DataTime)
+Ex: CID-001------Sam-----Saving 
+			|------T-01----Dep---10000
+			|-----T-02----Dep----20000
+			|----T-04----With----20000
+	Max( Amount ) : 20000
+C:Q:: How many filter conditions we can write ?
+Ans:  5 conditions
+C:Q::Which fields we can use?
+Ans : Child object fields 
+C:Q:: How many rollup summary fields can be created ?
+Ans : :10
+Steps to Create the Rollup Summary field:
+Navigation: SetupBuildCreateObjectsMaster ObjectCustom & RelationshipNew
+Step 1: Select Rollup Summary data Type 
+Step 2: Select Child Object
+	1. Select the Rollup Operation
+	2. Select the field from Child Object
+	3. Write the filter Condition
+Step 3: Field Level Security
+Step 4: Add the field to the Page Layout.
+
+Global  Data : Data which remains same throughout the application  ones user has logined to his account that data we call it as global data .
+Global data is always prefixed with ‘$’
+Ex: $UserRole
+       $Profile
+      $System
+Formulas : These the fields whose value is computed based on the existing fields in the objects .
+Every formule will return the result  and the formules in the salesforce will return the result in the form of 
+	1.Text
+	2.Date
+	3.DataTime
+	4.Number
+	5.Currency
+	6.Percentage
+	7.Checkbox
+There are two  types of formules in the salesforce 
+	1.Simple Formules :  These are created to build simple logic using the fields which are compatable with 
+                       return type what we have selected .
+	Advanced Formules :  These are created when we have a complexed logic   and we can use fields of the 
+                 object on which we are creating formule and parent object fields 
+
+To support the adavanced formules salesforce have given some predefined functions 
+
+Logical Functions :
+AND:  When all the given conditions are true this will return true 
+	Ex: Employee with age above 25 and exp above 6 years  should be selected 
+	AND( Age__c  >25 ,Exp__c>6)
+IF  : When we have  two options where contion is true return option1 else return option 2
+	 Employee with age above 25 and exp above 6 years is selected  else rejected
+	IF( AND( Age__c >25 ,Exp__c> 6) , ‘Selected’ ,’Rejected’)
+	If (Condition , stmt 1,Stmt 2)
+CASE   When we have more than  two choices we will use CASE
+	Calculate InterstRate : 
+	Education : 12
+	Vehicle      :14
+	Personal: 16
+	Housing   :18
+	CASE(Loan_Type__c ,
+		‘Education’, 0.12,
+		‘Vehicle’.0.14,
+		‘Personal’,0.16,
+		‘Housing’.0.18,
+		0
+)
+
+ISNULL : This will return true if the field value is null ,This is used for checking numerical values and blank value is never considered as NULL
+ISNUMBER  : This will return true if the expression value is NUMBER 
+ISNUMBER(10)===True
+NULLVALUE( Field ,Default Value) :
+
+OR : if any of the condition is true it will return  true :
+	OR( cond1,Cond2,Cond3)
+
+Math Functions :
+	1.ABS( 10) ===10
+	 ABS(-10)===10
+	2.FLOOR( 10.3)==10
+	  FLOOR(10.9)===10
+	3.CELING(10.3)===11
+	4.CELING(10.9)==11
+	5.ROUND(10.3)===10
+	 ROUND(10.9)===11
+	6.SQRT(9)===3
+	7.GEOLOCATION( lon ,latitude)
+	8.DISTANCE( g1,g2,units)
+	9.ISBLANK() :This will return true if the field is blank or Null
+	10.BLANKVALUE(field,Defualt)
+	11.LOG(23)
+	12.LN()
+	13.MAX(20,30,40)==40
+	14.MIN(10,20,30)===10
+	15.MOD( 23,2)===1
+
+Date  &Time 
+	1.TODAY() ===Returns today’s date
+	2.NOW() ====Returns  current date and time 
+	3.DATE(Year, Month,Day) : DATE(2014,12,25) 
+	4.DAY(Date) : It will return the day of the month 
+	DAY(DATE(2014,12,25))===25
+	5.MONTH( Date) :Returns month in the year
+	MONTH(DATE(2014,12,25))===12
+	6.YEAR() : This will year in the date 
+	YEAR(DATE(2014,12,25))==2014
+	7.DATEVALUE( expression) : This will convert the date and Time value to date 
+	
+Text :  
+	ISPICKVAL(PicklistField ,literal) : True 
+ 	Type : Dep ,With ,EMI
+		Withdraw : Service Tax is 100 , 1% of amount 
+
+	IF ( ISPICKVAL(Type__c,’Withdraw’) , 100 ,amount__c*0.01)
+ 
+	INCLUDES( MultiSelectPickList , literal) :This will return true if the given literal in the selected list of values
+	BEGINS(Text ,starttext) : 
+	BEGINS(‘ABCD’,’A’)===True
+	FIND(searchtext ,text ,position)
+		FIND(‘AB’,’ABCABCSS’,2)====4
+	LEFT( ‘ABCD’,2)===AB
+	RIGHT(‘ABCD’,2)==CD
+	LPAD(‘ABCD’,6,’*’)=====  **ABCD
+	RPAD(‘ABCD’,6,’*’)=====ABCD**
+	CONTAINS(‘ABCDED’,’DE’)==true
+	CONAINS(“AB:CD:EF’,’EF’)====true
+	TEXT(10)====’10’ ( 10+10===20 ,’10’+’10’===1010
+	VALUE(‘10’)===10
+	ISCHANGED(Amount__c)
+Ex 1: Loan 
+		1.LoanType __c  : PickList
+		2.Security           :PickList 
+		3.Installments : 
+
+			Secutity =’salary’
+				Education : 48
+				Vehicle      :24
+				Personal    : 32
+				Housing : 120
+			Security   :Assert :
+					36
+
+		IF( ISPICKVAL(Security__C,’Assert’) , 36,
+				CASE( Loan_Type__c,
+					‘Education’,48,
+					0
+                                    		)
+		)
+
+Validation: 
+Any one who want to apply for a loan based on salary they cant leave salary field blank
+Any one who want to apply for loan based on Assers they cant leave assercost blank
+
+
+
+
+
+Customer : 
+	Account Type : Saving ,Current ,Salary 
+	Balance	
+Transaction : 
+	Type : Dep ,With,EMI
+	Amount :
+
+Salary : 0
+Saving : 2000
+Currrent :30000
+	ISPICKVAL(Type__c,’With’) , (     OR(   AND( ISPICKVAL(Customer__r.AccountType__c,’Saving’) ,
+						     Customer__r.Balance-Amount__c<2000
+                                                            	                ),
+					            AND ( ISPICKVAL(Customer__r.AccountType__c,’Current’),
+						      Customer__r.Balance__c-Amount__c< 30000)
+					              )
+					)
+	)
+
+	Transaction object 
+
+Type : Dep,With,EMI
+	
+After : After 5th of the Month  then  Service tax should  be 10 % of the amount.
+
+
+IF( AND(ISPICKVAL(Type__c,’EMI’), DAY(Transaction_Date__c)>5) ,
+           Amount__c*0.10,
+  	0
+ )
+	 If any one is paying IncomeTax after 10th Aug they have late fee  of 1000
+
+IF (   AND(DAY(Payment__c)>10 ,MONTH(Payment__c)>7),
+       1000,
+0
+)
+
+	 If any trying change the password before 10 days of last modification
+
+AND( ISCHANGED(Password__c) ,(TODAY()-DATEVALUE(LastModifiedDate))<10)) 
+
+
+IF the city what what you have selected is in Hyd,Che,Pune  then you should enter pancard value
+
+AND (CONTAINS(City__c,’HYD:CHE:Pune’) ,ISBLANK(Pancard__c) )
+
+	Parent : 
+
+Name :
+Age :
+          Child : 
+    MyName =Parent__r.Name
