@@ -1,0 +1,51 @@
+<apex:page controller="AdvanceSearchExtension_R1" action="{!ivrCheck}">
+    <!-- SFDC -->
+    <apex:includescript value="/soap/ajax/29.0/connection.js" />
+    <apex:includescript value="/lightning/lightning.out.js" />
+    <apex:includescript value="/resource/SLDS104/assets/js/integration.js" />
+    <script>
+
+    var sfId = '{!strsfdcId}';
+    var verified = '{!strverified}';
+
+
+    window.onload = function() {
+
+
+                if (sforce.console.isInConsole())
+                {
+                    sforce.console.setTabTitle('Customer Search');
+                }
+
+            }
+
+        function formatPhone(obj) {
+            var value='';
+            var numbers = obj.replace(/\D/g, ''),
+            char = { 0: '(', 3: ') ', 6: '-' };
+            value = '';
+            for (var i = 0; i < numbers.length; i++) {
+                value += (char[i] || '') + numbers[i];
+            }
+
+            return value;
+        }
+
+
+    $Lightning.use("c:AdvancedSearch", function() {
+        $Lightning.createComponent(
+            "c:CustomerSearch",
+            {'triggerClick':'{!triggerClick}',"phone": formatPhone('{!strPhoneNo}'),"ssn": '{!$CurrentPage.Parameters.ssn}',"zipCode": '{!strZipcode}'},
+            "Advanced Search",
+            function(cmp,event,helper) {
+
+
+
+            });
+        });
+
+
+
+    </script>
+    <div id="Advanced Search"></div>
+</apex:page>
