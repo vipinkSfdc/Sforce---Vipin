@@ -1,0 +1,214 @@
+------------------------------------------------------------------
+Scenario :1
+1. When ever a we are inserting a new Account record  before the
+   record is inserted check the industry value
+
+  a. if industry is 'Banking' set annualRevenue as 100000;
+
+  b. If industry is 'Energy' set annualRevenue as 50000 
+------------------------------------------------------------------
+Trigger:
+
+trigger example1 on Account (before insert) {
+    for(Account a: Trigger.New){
+        if(a.industry=='Banking'){
+            a.AnnualRevenue=100000;
+	}else{
+		if(a.industry == 'Energy'){
+            		a.AnnualRevenue=50000;
+		}
+    }
+}
+-------------
+Test Class :
+-------------
+@isTest
+private class Example1 {
+    @isTest
+    static void testme(){
+        Account a1=new Account(name='aaa',Industry='Banking');
+        Account a2=new Account(name='bbb',Industry='Energy');
+        try{
+            insert a1;
+            insert a2;
+        }catch(Exception e){
+            System.debug(e);
+        }
+        Account acc1=[select id,annualRevenue from Account where id=:a1.id];
+        System.assertEquals(acc1.AnnualRevenue,100000);
+        Account acc2=[select id ,annualRevenue from Account where id=:a2.id];
+        System.assertEquals(acc2.AnnualRevenue,50000);
+    }
+}
+------------------------------------------------------------------
+Scenario 2: 
+ 1. When a  new contact is created with lead source web
+
+ 2. AccountId field can not be blank or null
+----------------------------------------------------------------
+Trigger :
+
+trigger example2 on Contact (before insert) {
+
+    for(Contact c:Trigger.New){
+
+        if(c.leadsource=='Web' && 
+
+			(c.accountId==''||c.accountId==null)){
+
+     c.addError('Web contact cannot be created with out account');
+
+        }
+    }
+}
+
+TestClass:
+----------
+@isTest
+private class Example2 {
+    @isTest
+    static void testme(){
+        Contact c1=new Contact(lastname='satish',leadSource='web');
+        Contact c2=new Contact(lastname='Myla');
+        List<Contact> cons=new List<Contact>{c1,c2};
+        Integer count=[select count() from Contact];
+        try{
+           Database.insert(cons,false);
+        }catch(Exception e){
+            System.debug(e);
+        }
+        Integer size=[select count() from contact ];
+        System.assertEquals(count+1,size);
+    }
+}
+-----------------------------------------------------------------------------
+Scenario 3:
+1. When a new opportunity is created with  following details 
+	
+	1.leadsourc is Web
+
+	2.amount > 50000
+
+	3. stagename!=closed won
+ 2. Reassign the owner to user karthic
+
+----------------------------------------------------------------------------
+trigger example3 on Opportunity (after insert) {
+    User u=[select id from user where alias='kart'];
+    List<Opportunity> ops=[select leadsource,Amount,StageName from Opportunity 						where id in:Trigger.new];
+    for(Opportunity p:ops){
+        if(p.stageName!='Closed won' && p.amount >50000 && 					p.leadsource=='Web'){
+            p.ownerId=u.id;
+        }
+    }
+    update ops;
+    
+}
+
+TestClass :
+------------
+@isTest
+private class ExampleTest3 {
+	@isTest
+    static void testme(){
+        Opportunity op=new Opportunity();
+        op.name='Test';
+        op.amount=10000;
+        op.closeDate=System.today()+3;
+        op.stageName='Qualification';
+        op.leadSource='Web';
+        try{
+            insert op;
+        }catch(Exception e){
+            System.debug(e);
+        }
+        User u=[select id from user where alias='kart'];
+        Opportunity p=[select ownerid from Opportunity where id=:op.id];
+        System.assertEquals(p.ownerId,u.id);
+    }
+}
+------------------------------------------------------------------------------
+Scenario 4: 
+
+1. Calculate the Lead quality score 
+
+	1. FirstName : 10 points 
+
+	2. Phone  :10 points 
+
+	3. Email  : 10 points 
+
+ if the lead score is 20 then create a new contact based on lead details
+assign the owner of the lead as owner of new contact
+---------------------------------------------------------------------------
+Trigger :
+trigger example5 on Lead (after insert) {
+	Integer total;
+    List<Contact> contacts=new List<Contact>();
+    for(Lead l:Trigger.New){
+		total=0;
+        if(l.firstName!=null && l.firstname!='')
+            total=total+10;
+        if(l.phone!=null && l.phone!='')
+            total=total+10;
+        if(l.email!=null && l.email!='')
+            total=total+10;
+        if(total>=20){
+            Contact c=new Contact();
+            c.lastname=l.lastname;
+            c.firstName=l.firstName;
+            c.phone=l.phone;
+            c.Email=l.email;
+            c.ownerId=l.ownerId;
+            contacts.add(c);
+        }
+    }
+    insert contacts;
+}
+
+---------------------------------------------------------------------------
+1. Deletion of account record should fail it has any contact records
+
+
+trigger example6 on Account (before delete) {
+    List<Account> accs=[select id,(Select id from Contacts) from Account where Id In:Trigger.Old];
+    for(Account a:accs){
+        if(a.contacts.size() > 0){
+            a.addError('Account Record with contact can not be deleted');
+        }
+    }
+}
+
+-----------------------------------------------------------------------------
+1. Create a Custom Field No_Of_Contats on Account Object 
+
+2. When ever new Contact is created  or deleted update the 
+ no_of_contacts fields with no of contacts that exits for the parent records
+----------------------------------------------------------------------------
+Trigger
+--------
+
+trigger contactsTriggers on Contact (after insert,after delete) {
+    if(Trigger.isInsert && Trigger.isAfter)
+        TriggerContact.increment(Trigger.New);
+    else
+        TriggerContact.increment(Trigger.Old);
+
+}
+
+
+public class TriggerContact {
+    public static void increment(List<Contact> cons){
+        set<Id> accid=new Set<id>();
+        for(Contact c:cons){
+           accId.add(c.AccountId); 
+        }
+       List<Account> accs=[select id,No_of_contacts__c ,(select id from Contacts ) from Account where id in:accId];
+        for(Account a:accs){
+            a.no_of_contacts__c=a.contacts.size();
+        }
+        update accs;
+    }
+
+}
+-----------------------------------------------------------------------------
