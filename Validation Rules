@@ -1,0 +1,187 @@
+validations : 
+-------------
+There will weather the format of the data that given the field is 
+compatable with your business requirement or not .
+
+There validation rules are verified when we create a new record or update the existing record 
+
+There  are two type of validation rule s
+
+1. System Validations 
+
+2. Custom Validations 
+
+System Validation rules :
+-------------------------
+There are created by the salesforce which will verify 
+	1. All required fields are entered or not 
+
+	2. DataType of the field is compatable with the format of the 
+	   given value 
+
+
+Custom Validataion Rules :
+--------------------------
+There are created by the user to meet this bussiness requirement
+
+Ex : Age should not be less thant 18
+
+Ex :Salary should be greater than 50000
+
+==> validation rule checks the condition if the given condition is true 
+   then it prints the custom error message defined by the user
+
+
+Example : 
+Object : Loan 
+
+Rule : AppliedDate Should not be less than today
+
+	Setup
+	   |--->Build
+		  |--->Create
+			 |----->objects
+				   |------Loan
+					    |---Validation Rules 
+							|----Rule
+
+	
+ Step 1: Enter the rule name 
+
+ Step 2: Rule : AppliedDate__c < TODAY()
+
+ Step 3: Error Message : AppliedDate should not be less than today
+
+
+Example 2: 
+
+Object  : Loan 
+
+Rule 	: If Security is Assert  then assert cost field cannot be  null
+
+
+	AND (
+
+		ISPICKVAL(Security__c,'Assert'),
+
+		ISNULL(AssertCost__c)
+
+         )
+
+Validation Error : When security is Assert then assertcost cannot be left
+	         blank
+-------------------------------------------------------------------------
+Example 3: 
+
+Object   : Loan
+
+Rule	 : if security is selected as Salary ,then salary field cannot be 
+	   null
+
+
+Validation  : AND(
+
+			ISPICKVAL(Security__c,'Salary'),
+
+			ISNULL(salary__c)
+		)
+
+Validation Error : When security is Salary then salary cannot be left
+	         blank
+-----------------------------------------------------------------------
+ISNEW()   : This funtion returns true if the validation is fired due to
+	     new record
+
+Example 4:
+-----------
+Object 	  :  Contact 
+
+Rule      :  New Contact record cannot be created without account
+
+Validation: AND (
+
+			ISNEW() ,
+
+                       ISBLANK(AccountId)
+              )
+
+Validation Error: New contact cannot be created with out accountid
+
+========================================================================
+ISCHANGED(fieldName) : This function returns true  if the value in
+
+			given field is changed
+
+
+Priorvalue(FieldName): This function returns old version of modified value
+
+Example 5:
+--------------
+
+Object   :Opportuntiy 
+
+Rule    : When ever the amount field value is nodified new value should 
+	  be more than the old value 
+
+Validation :
+             AND ( 
+
+		   ISCHANGED( Amount) ,
+
+                   PRIORVALUE(Amount) > Amount
+
+                )
+
+Validation Error : Old version of value should not be more than the 
+		new Value
+
+----------------------------------------------------------------------
+Example 6:
+
+Object :Account
+
+	Annual Revenue field should not be null when industry is 
+	energy
+
+	AND( 
+		ISPICKVAL(Industry,'Energy'),
+
+		ISNULL(AnnualRevenue)
+	)
+-------------------------------------------------------------------
+Example 7:
+
+   Object : Account 
+
+	If the annualRevenue field is modified  new Value of 
+	annualRevenue should be  more than the old value 
+
+	AND( 
+     		ISCHANGED(AnnualRevenue) ,
+
+     		AnnualRevenue< PRIORVALUE(AnnualRevenue) 
+	)
+--------------------------------------------------------------------
+Example 8:
+-------------
+    Object Loan :
+
+	Education Loan should be applied Before 15 th of month
+	Housing Loan should be applied before 20th of the month
+
+	OR(
+     		AND(
+          		ISPICKVAL( Loan_Type__c ,'Education') ,
+ 
+          		DAY( Applied_Date__c )>15
+       		),
+     		AND( 
+  
+             		ISPICKVAL( Loan_Type__c,'Housing') ,
+
+            		DAY( Applied_Date__c) >20
+       		)
+	)
+	
+
+------------------------------------------------------------------------
