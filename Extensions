@@ -1,0 +1,101 @@
+Extentions :
+------------
+ 1.When we want to define standardController and Custom Controller together in 
+   the same VF page then we extentions 
+
+ 2.Sobject what we want to reffer in the VF page is defined as    standardController
+
+ 3.Apex class what we want to use as controller is defined as Extentions
+
+ 4.Using Extentions we can define more than one class in the same VF page 
+
+ 5.Any Apex class that is defined as an extentions should have constructor     with any one of the parameters given below
+
+     a. ApexPages.StandardController 
+
+     b. Apexpages.StandardSetController
+
+    Ex : className(ApexPages.StandardController controller)
+
+	In the above example controller reffers to record of 	         standrardcontroller from which this contructor is invoked
+
+ 6.If there is more than one apex class defined as an extention then
+   their order of execution will left to right 
+
+ 7.Which means always it first check for the varibles or methods from the 
+   firstclass  and if it is not availble checks in next class 
+
+
+ Ex: 
+	public class Class1 {
+    		public String name {Set;get;}
+    		public Class1(ApexPages.StandardController controller){
+        		name='Ravi';
+    		}
+	}
+ 
+	public class Class2 {
+    		public String name {set;get;}
+    		public String branch {set;get;}
+    		public Class2(Apexpages.StandardController controller){
+        		name='Hari Prasad';
+        		branch='SRNagar';
+    		}
+
+	}
+
+<apex:page  standardController="Account" extensions="Class1,Class2">
+    Name : {!name} <br/>
+    Branch:{!branch}
+</apex:page>
+
+
+o/p :Ravi SRNagar
+-----------------------------------------------------------------------------
+  8.If we using a standardController only the record is fetched when invoke
+
+	controller.getRecord();
+
+  9.If we fetch any other fields apart from record Id we have add the list 
+    of fields which we want to fetch to the controller
+
+	 List<String> fields=new List<String>{'name','Industry','Phone'};
+
+	controler.addFields();
+
+	controller.getRecord();
+
+Example  :
+
+	Create a  custom detail page button on the Account object and add it 	to the  account pageLayout .
+
+	When we click on the button it has to display Account Record data 
+	
+
+	public class AccountButton {
+    		public Account accs {Set;get;}
+    		public AccountButton(ApexPages.StandardController controller){
+        	String[] fields=new String[]{'name','industry','type'};
+        		controller.addFields(fields);
+        		accs=(Account)controller.getRecord();
+    		}
+
+	}
+
+<apex:page standardController="Account" extensions="AccountButton">
+    <apex:outputPanel>
+        Name : {!accs.Name} <br/>
+        Industry:{!accs.Industry}<br/>
+        Type : {!accs.Type}
+    </apex:outputPanel>
+</apex:page>
+
+
+
+
+
+
+
+
+
+
