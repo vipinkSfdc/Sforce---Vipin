@@ -1,0 +1,617 @@
+DML : Data Manipulation Language :
+    : DML Statements are used to Perform changes on the  data of Sobjects of the salesforce.
+
+    : DML can perform  operations like
+	
+    : Insert ,Update ,Upsert,Delete ,Undelete, merge 
+
+DML's are of two types 
+	1. Atomic Operations 
+	2. Non-Atomic Operations
+
+Atomic Operation: 
+	1.If any one of the record fail entire DML operation fail's which we call as atomic .
+
+	2.All the dml operations which are performed using DML keywors like 
+		insert ,update ,delete ,undelte ,merger are atomic
+
+	
+	Ex: insert accs;
+	    delete accs;
+	    undelete accs;
+
+Non-Atomic Operation :
+
+	1.If any of the record fails ,Leave that record and operation will continue with other 
+	 records.
+
+	2. If want to perform DML in non-atomic format we have to methods defined in the 
+	   database namespace 
+
+		Ex: Database.insert(sobject[],false);
+		Ex: Database.update(sobject[],false);
+
+
+1. Insert  : This is used to create new records in the Sobejct 
+
+	Syntax : insert sobject |Sobject[] ;
+
+	Example 1; Create a new record for Account and insert. 
+
+		Account acc=new Account();
+
+			acc.Name='TCS';
+			acc.Industry='Banking';
+			acc.Phone='123';
+			insert acc;
+
+	Example 2: Create a new record for Contact and insert .
+
+		Contact con=new Contact();
+
+		con.LastName='Myla';
+		con.FirstName='Satish';
+		con.Phone='123';
+		con.Email='javasfdc@gmail.com';
+		insert con;
+
+	Example 3: Create a new record for opportunity and insert .
+
+		Opportunity op=new Opportunity();
+				
+		Op.Name='Salesforce';
+		op.StageName='Prospecting';
+		op.Amount=9000;
+		op.expectedReveneue=3000;
+		op.closeDate=System.today()+5;
+		op.leadSource='Web';
+		insert op;
+
+	Example 4: Create a new reocord for the Case  and insert 
+
+		
+		Case c=new Case();
+
+		c.Subject='Need Instalation';
+		c.Priority='Normal';
+		c.Status='Woking';
+		c.origin='Web';
+		c.Type='other';
+		c.reason='Instalation';
+		insert c;
+
+	Example 5: Create a new Lead record and insert
+
+		Lead myLead=new Lead();
+		myLead.LastName='Myla';
+		myLead.FirstName='Satish';
+		myLead.company='Capital';
+		myLead.Phone='123';
+		myLead.email='javasfdc@gmail.com';
+			
+		insert mylead;
+
+	Example 6: Create a new product recod and insert.
+
+		Product p=new Product();
+		p.name='Salesforce';
+		p.Family='None';
+		p.isActive=true;
+		p.productCode='SFDC001';
+
+		insert p;
+
+	Example 7: 
+		1.Create a new Account record 
+
+		2.Insert a contact for the above Account
+
+		Account acc=new Account();
+		acc.Name='CapitalInfo';
+		acc.Phone='8686864286';
+		acc.Industry='Education';
+
+		insert acc;
+
+		Contact con=new COntact();
+		con.AccountId=acc.Id; // On contact object we have lookup field Account 
+				      // As this field is created by salesforce we append id 
+		con.LastName='Myla';
+		con.FirstName='Satish';
+		con.phone='1234';
+
+		insert con;
+
+	Example 8: 
+
+		1.Create an account record 
+
+		2.Create new Opportunity for above account .
+
+		Account acc=new Account();
+		acc.Name='CapitalInfo';
+		acc.Industry='Banking';
+		acc.Phone='12344';
+		
+		insert acc;
+
+		Opportunity op=new Opportunity();
+		op.Name='Salesforce';
+		op.AccountId=acc.Id;
+		op.stagename='Closed won';
+		op.closeDate=System.today();
+		op.amount=90000;
+		insert op;
+
+
+	Example 9:
+
+		1.Create new Contact 
+
+		2.Create a case for the new contact 
+
+		Contact c=new Contact();
+		c.LastName='Myla';
+		c.FirstName='Satish';
+		c.Phone='123';
+		
+		insert c;
+
+		Case cases=new Case();
+
+		cases.Subject='New Support';
+		cases.origin='Phone';
+		cases.priority='Normal';
+		cases.contactid=c.id;
+		insert cases;
+		
+	Example 10:
+
+		  
+		1. Create a new Lead record and set the ;wilson as owner;
+
+		User u=[select id  from User where firstName='wilson'];
+
+		Lead myLead=new Lead();
+		myLead.FirstName='Satish';
+		myLead.LastName='Myla';
+		myLead.company='Capital';
+		myLead.ownerId=u.id;
+		
+		insert myLead;
+
+	Example 11: 
+
+		1.Create a new Accout record and set 'satish' as owner of the record
+
+		User u=[select id from User where firstName='satish'];
+		
+		Account acc=new Account();
+		acc.Name='TCS';
+		acc.Industry='Banking';
+		acc.Phone='123';
+
+		acc.ownerId=u.Id;
+		insert acc;
+
+
+	Example 12: 
+
+		1. Fetch the Account whose  account name is TCS and Industry is Banking and 
+		   insert a new Attachment.
+
+		Account acc=[select id from Account where Name='TCS' and Industry='Banking'];
+
+		Attachment attach=new Attachment();
+		
+		Blob body=Blob.toPdf('This is a test');
+		attach.Name='MyFile';
+		attach.Body=body;
+		attatch.parentId=acc.id;
+		insert attach;
+
+	Example 13: 
+
+		1. Fetch the Contact whose phone is '999' and insert an new attachment
+
+		Contact c=[select id from Contact where phone='999' ];
+		
+
+		Attachment at1=new Attachment();
+		at1.Name='Test Attach';
+		at1.Body=body;
+		at1.ParentId=c.id;
+		insert at1;
+
+2.Update :  This statement is used to modify the data that is already commited in the database.
+
+	 :  it want to update we need id of the record 
+
+	 Syntax : Update sobject |Sobject[]
+
+	Example 1: Fetch the Account whose name is Capital and update the phone as 8686864286
+
+		Account acc=[select id,phone from Account where Name='Capital' ];
+
+		acc.Phone='8686864286';
+	
+		update acc;
+
+	Example 2: Fetch the contact whose lastname is Myla and update mobile as '2344'
+
+		Contact c=[select id,mobile from Contact where lastname='Myla'];
+
+		c.mobile='2344';
+
+		update c;
+
+	Example 3:Fetch All the Opportunities which are created in this month and update thier
+		 status closed won
+
+		List<Opportunity> optyList=[select id,stageName from Opportunity where 									CreatedDate=THIS_MONTH];
+
+		for(Opportunity op: optyList){
+	
+			op.stageName='Closed Won';
+		}
+		update optyList;
+
+	Example 4: Fetch all the Lead's whose Status is Open-Not Contacted and reassign them
+		   to satish
+
+	   List<Lead> leads=[select id,ownerId from lead where Status='Open- Not contacted'];
+	
+	   User u=[select id from user where FirstName='Satish'];
+
+		for( Lead l:leads){
+			l.ownerId=u.id;
+		}
+	
+		update leads;
+
+	Example 5: Fetch all the Opportunities whose lastactivity is more than 30 days and 
+		   Update status='Prospecting'
+
+	  List<Opportunity> optyList=[select id,StageName from Opportunity where 
+						LastModifiedDate > LAST_N_DAYS: 30];
+
+		for(Opportunity op:OptyList){
+			op.stagename='Prospecting';
+		}
+		
+		update optyList;
+
+	
+	Example 6: Fetch all the contacts of the Account whose industry is Banking and update
+		   contact's other phone as Account's phone and Contact's LeadSource as 
+		   Account's LeadSource
+
+	List<Account> accs=[select id,phone,LeadSource,(select otherphone ,leadsource from
+					contacts) from Account where Industry='Banking'];
+
+		List<Contact> contacts=new List<Contact>();
+
+		for(Account a: accs){
+			
+			for(Contact c: a.contacts){
+			
+				c.otherPhone=a.phone;
+				c.leadSource=a.leadSource;
+				contacts.add(c);
+				
+			}
+
+		}
+		update contacts;
+
+	Example 7: Fetch all the Opportunities of those accounts whoes industry is energy
+		  and update the fieds closeDate as Today and Stagename as Closed Won.
+
+	List<Opportunity> optyList=[select id,closeDate,stageName from Opportunity where 
+					Account.Industry='Energy'];
+
+		for(Opportunity op: optyList){
+
+			op.closeDate=System.today();
+			op.stageName='Closed Won';
+		}
+
+		update optyList;
+
+
+Delete 	: This is used to delete the records from the sobject .
+	
+	Syntax : Delete sobject |Sobject[]
+
+	Example 1: Delete all the Accounts which are createdToday
+
+		List<Account> accs=[select id from Account];
+		delete accs;
+
+	Example 2: Fetch all the lead which are last modified  120 days back  and delete them.
+
+	List<Lead> leads=[select id from Lead where LastModifiedDate> LAST_N_DAY:120];
+
+		delete leads;
+
+Undelete : This is used to undelete the records from recylebin
+
+	 Syntax : Undelete sobject |Sobject[]
+
+	Example 1: Fetch all the cases which are recylebin and undelte them
+
+		List<Case> cases=[select id from Case where isDelete=true ALL ROWS];
+
+		undelete cases;
+
+	Example 2: Undelete the contacts whose account's Industry is Education
+
+		List<Contact> contacts=[select id from Contact where 				Account.Industry='Education' and isDeleted=True ALL ROWS];
+
+		undelete contacts;
+
+
+Upsert : if the records alreay exist then update the record ,if the record doesn' exit then
+	 insert new record;
+
+	Syntax : Upsert sobject|Sobject[] externalid;
+
+	Note if we dont give externalId, by defualt record is taken as external id
+
+
+	Example 1:  Account ac1=new Account(Name='TCS',Industry='Banking');
+		    insert ac1;
+		
+		    Account ac2=new Account(Name='Wipro',Industry='Energy');
+
+		    List<Account> accs=new List<Account>{ac1,ac2};
+			
+		    upsert accs;
+
+		Note : ac1 will be updated and ac2 will be inserted;
+
+
+Merge : Join to or more records into a single record is called merge 
+	
+	Syntax : Merge sobject1 sobject2
+
+      : When we merge child records of sobject2 are reassigned to sobject1
+
+      : Then sobject2 is deleted
+	
+	Example 1:
+
+	Account acc1=new Account(Name='Wipro',Industry='Banking');
+	insert acc1;
+
+	Contact con1=new Contact(LastName='Myla',FirstName='satish',accountid=acc1.id);
+	insert con1;
+
+	Account acc2=new Account(Name='TCS',Industry='Banking');
+	insert acc2;
+
+	Contact con2=new Contact(LastName='Ch',FirstName='Ramesh',accountid=acc2.id);
+	insert con2;
+
+	merge acc1 acc2;
+
+	Note ; in the above example child records of acc2 is reassigned to acc1,
+
+		and acc2 will be deleted ( Wipro will have two contacts, satish ,ramesh)
+
+----------------------------------------------------------------------------------------
+DML using Database namespace 
+----------------------------------------------------------------------------------------
+1.Dabase.Error : This class Represents the errors that are generated during the DML
+		 opeartion using Database namespace
+
+	Methods :
+
+	1. getFields():  This method will return you list of fields on which the 
+			 error has occured during the DML operation
+
+		Syntax:  String[] getFields()
+
+	2.getMessage() : This method will return error message that is generated during
+			 the DML operation
+
+		Syntaxt : String getMessage()
+
+	3.getStatusCode(): This method will return you the code which convey the error
+
+
+		Syntax :StatusCode getStatusCode()
+
+
+2.Database.SaveResult :
+
+  	This class contains the result returned by the Database methods during the DML 		operation of insert /Update
+
+	Methods : 
+
+	1. isSuccess() : This method will return true if the DML operation is succes ,
+			 returns flase if the DML failed
+
+		Syntax : Boolean isSuccess()
+
+	2. getId()     : This method will return you the id of the record on which DML
+			 performed
+
+		Syntax : Id getId()
+
+	3. getErrors():This method will return you the Array of Error messages that 
+			 are generated
+
+		Syntax: Database.Error[] getErrors()
+
+
+--------------------------------------------------------------------------------------
+3.Database.insert(sobject[] ,flag): 
+---------------------------------------------------------------------------------------
+	1.This method is used to insert new records into the sobject 
+
+	2. if we give flag as true then DML operation will run as atomic
+
+	3. if we give flag as flase then DML operation will run as non-atomic
+
+	4. This method will return Database.SaveResult[] as return type 
+
+
+	Syntax: Database.SaveResult[] result=Database.insert(Sobject[],flag);
+
+
+Example 1: 
+
+Apex Class : DMLExample3
+
+public class DMLExample3 {
+    public void create(){
+        Account acc1=new Account();
+        acc1.Name='Wipro';
+        acc1.Industry='Banking';
+        acc1.Phone='123';
+        /* In the acc2 we are not assigning the account name */
+        Account acc2=new Account();
+        acc2.Industry='Energy';
+        acc2.Phone='2345';
+        List<Account> accs=new List<Account>{acc1,acc2};
+        Database.SaveResult[] result=Database.insert(accs,false);
+        String  message='';
+        for(Database.SaveResult sr:result){
+            if(sr.isSuccess()){
+                message='New Account  with id :'+sr.getId()+ ' inserted';
+            }else{
+                for(Database.Error er:sr.getErrors()){
+                    message=message+' <\n>Error :'+er.getFields()+' Message 						:'+er.getMessage();
+                }
+            }
+        }
+        Apexpages.Message msg=new Apexpages.Message(ApexPages.Severity.WARNING,message);
+        Apexpages.addMessage(msg);
+    }
+}	
+
+
+VFPage :
+
+<apex:page controller="DMLExample3" action="{!create}">
+    <apex:form>
+    	<apex:pageBlock title="DMLExample">
+        	<apex:pageMessages></apex:pageMessages>
+        </apex:pageBlock>
+    </apex:form>
+</apex:page>
+
+
+----------------------------------------------------------------------------------------
+Database.upsert(sobject[] ,falg)
+----------------------------------------------------------------------------------------
+  This class contains the result returned by the Database methods during the DML 		  operation of upsert
+
+	Methods : 
+
+	1. isSuccess() : This method will return true if the DML operation is succes ,
+			 returns flase if the DML failed
+
+			Syntax : Boolean isSuccess()
+
+	2. getId()     : This method will return you the id of the record on which DML
+			 performed
+
+			Syntax : Id getId()
+
+	3. getErrors():This method will return you the Array of Error messages that 
+			 are generated
+
+			Syntax: Database.Error[] getErrors()
+
+	4. isCreated() : This method return true if the DML performed on the record is
+			insert
+
+			Syntax : Boolean isCreated()
+
+
+Example 1:
+
+public class DMLExample4 {
+    public void create(){
+        /* fetch one record from Account object which is commited to database */
+        Account acc1=[select id ,name ,industry from Account  limit 1];
+       /* This is a new Account record which we are inserting  */
+        Account acc2=new Account();
+        acc2.Name='Wipro';
+        acc2.Industry='Banking';
+        acc2.Phone='123';
+        /* In the acc2 we are not assigning the account name */
+        Account acc3=new Account();
+        acc3.Industry='Energy';
+        acc3.Phone='2345';
+        List<Account> accs=new List<Account>{acc1,acc2,acc3};
+        Database.UpsertResult[] result=Database.upsert(accs,false);
+        String message='';
+        for(Database.UpsertResult up: result){
+            if(up.isSuccess()){
+                if(up.isCreated()){
+                	message=Message+'  \n Record inserted :'+up.getId()+' \n';
+                }else{
+                    message=Message+' \n Record Is Updated :'+up.getid();
+                }
+            }else{
+                for(Database.Error er: up.getErrors()){
+                    message=Message+' \n Error message :'+er.getMessage()+'\n';
+                }
+            }
+        }
+        Apexpages.message msg=new Apexpages.Message(ApexPages.Severity.WARNING,message);
+        Apexpages.addmessage(msg);
+    }
+}
+
+VFpage:
+<apex:page controller="DMLExample4" action="{!create}">
+    <apex:pageBlock title="page">
+        <apex:pageMessages />
+    </apex:pageBlock>
+</apex:page>
+
+----------------------------------------------------------------------------------------
+Database.delete(sobject[] ,flag)
+----------------------------------------------------------------------------------------
+This will delete the records from sobject 
+if set the flag =true then run as atomic 
+if set the flag as false the run as non-atomic
+
+-----------------------------------------------------------------------------------------
+Database.emptyRecyclebin(sobject[] /Id[])
+-----------------------------------------------------------------------------------------
+This will hard delete the records which are in recylebin
+
+
+Example :
+
+List<Account> accs=[select id  from Account where createddate=THIS_WEEK];
+Database.delete(accs,false);
+Database.emptyRecycleBin(accs);
+
+---------------------------------------------------------------------------------------
+SavePoint and Rollback
+---------------------------------------------------------------------------------------
+We can create a savePoint to refer to the instance of the data that is existing now 
+
+This is like perform complete transaciton or reject complete transaction
+Example :
+
+SavePoint sp=Database.setSavepoint();
+try{
+	Account acc=new Account();
+	acc.name='Wipro';
+	acc.industry='Education';
+	acc.Phone='123';
+	insert acc;
+	Contact con=new Contact();
+	con.accountId=acc.id;
+	insert con;
+}catch(Exception e){
+    Database.rollback(sp);
+}
+
