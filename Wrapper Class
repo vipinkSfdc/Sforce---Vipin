@@ -1,0 +1,217 @@
+1. Create  a wrapper class with elements 
+	1. name :String
+	2. code :String
+	3. price :Decimal
+Solution :
+----------
+public class ProdWrapper {
+    public String name {set;get;}
+    public String code {set;get;}
+    public Decimal price{set;get;}
+}
+
+2. Create a class ProductList with following members 
+     1.products :List<ProdWrapper>  // This will contain the 					intial list of product 					that we want to display
+     2.myList   : List<ProdWrapper> // This will contain the list 
+					prodWrapper elements whose
+					name is not null
+
+    3. ProductList() : Assign the memory for Products and 
+			add two prodWrapper  elements to the list
+
+    4. addMore(): void : When ever this method is called add two  
+			prodWrapper elements to the list 
+
+Snippet :
+	public void addMore(){
+        for(Integer i=1;i<=2;i++){
+            ProdWrapper pw=new ProdWrapper();
+            products.add(pw);
+        }
+    }
+
+   5: clearAll() :void : When this method is called remove all the 
+			elements from the products list
+
+Snippet: 
+	public void clearAll(){
+           products.clear();
+         }
+
+   6: submit() : When call this methods all the ProdWrapper                 elements from product list whose name is not null                 put those prodWrpper elements into mylist
+   
+Snippet : 
+	public void submit(){
+        myList=new List<ProdWrapper>();
+        for(ProdWrapper p:Products){
+            if(p.name!=null && p.name!=''){
+                mylist.add(p);
+            }
+        }
+    }
+
+Complete Class :
+==================
+
+public class ProductList {
+    public List<ProdWrapper> products {Set;get;}
+    public List<ProdWrapper> myList  {Set;get;}
+    public ProductList(){
+        products=new List<ProdWrapper>();
+        addMore();
+    }
+    public void addMore(){
+        for(Integer i=1;i<=2;i++){
+            ProdWrapper pw=new ProdWrapper();
+            products.add(pw);
+        }
+    }
+    public void clearAll(){
+        products.clear();
+    }
+    public void submit(){
+        myList=new List<ProdWrapper>();
+        for(ProdWrapper p:Products){
+            if(p.name!=null && p.name!=''){
+                mylist.add(p);
+            }
+        }
+    }
+}
+
+VF Page :
+---------
+<apex:page controller="ProductList" >
+    <apex:form>
+    	<apex:pageBlock title="Products">
+        	<apex:pageBlockButtons>
+                <apex:commandBUtton value="Clear" action="{!clearAll}" />
+                <apex:commandButton value="AddMore" action="{!addMore}" />
+                <apex:commandButton value="Submit" action="{!submit}"  />
+            </apex:pageBlockButtons>
+            <apex:pageBlockTable value="{!products}" var="a">
+                <apex:column >
+                    <apex:inputText value="{!a.name}" />
+                </apex:column>
+                 <apex:column >
+                    <apex:inputText value="{!a.price}" />
+                </apex:column>
+                 <apex:column >
+                    <apex:inputText value="{!a.code}" />
+                </apex:column>
+            </apex:pageBlockTable>
+        </apex:pageBlock>
+  <apex:pageBlock title="Products" rendered="{! !ISNULL(mylist)}">
+            <apex:pageBlockTable value="{!mylist}" var="a">
+                <apex:column value="{!a.name}" />
+                <apex:column value="{!a.price}"   />
+                <apex:column value="{!a.code}" />
+            </apex:pageBlockTable>
+        </apex:pageBlock>
+    </apex:form>
+</apex:page>
+
+===============================================================
+Example 2:
+===============================================================
+1. Create a class with following members 
+	1.options :List<SelectOption> : This will contain the list 
+				   of options created 
+
+	2.selected : String : This will contain the value based 
+				on the option selected 
+
+	3.result : 
+
+
+public class PickExample {
+    public List<SelectOption> options {set;get;}
+    public String selected {Set;get;}
+    public String result {set;get;}
+    public PickExample(){
+        options=new List<SelectOption>();
+        SelectOption op1=new SelectOption('none','-None-');
+        SelectOption op2=new SelectOption('TG','Hyd');
+        SelectOption op3=new SelectOption('TN','Che');
+        SelectOption op4=new SelectOption('KA','Ban');
+        options.add(op1);
+        options.add(op2);
+        options.add(op3);
+        options.add(op4);
+    }
+    public void callme(){
+        result='You Have selected :'+selected;
+    }
+}
+
+
+VF Page:
+========
+<apex:page  controller="PickExample">
+    <apex:form>
+    	<apex:pageBlock title="PickList">
+            <apex:outputLabel value="Cities" />
+            <apex:selectList size="1" value="{!selected}" >
+                <apex:selectOptions value="{!options}" />
+                <apex:actionSupport event="onchange" action="{!callme}" reRender="res" />
+            </apex:selectList>
+            <apex:outputLabel value="{!result}" id="res" />
+        </apex:pageBlock>
+    </apex:form>
+</apex:page>
+================================================================
+
+Example 3:
+1. Create a wrapper class ProdWrapper with following 
+	1. prodName;
+	2. prodCode; 
+
+ public class ProdWrapper{
+	public String prodName;
+	public String prodCode;
+
+ }
+
+
+2. Create a List<ProdWrapper>  and three prodWrapper objects to
+   it
+
+	List<ProdWrapper> products=new List<ProdWrapper>();
+
+	ProdWrapper pw1=new ProdWrapper();
+	pw1.prodName='Dell';
+	pw1.prodCode='D-01';
+	
+	ProdWrapper pw2=new ProdWrapper();
+	pw2.prodName='TCS';
+	psw.prodCode='T-01';
+
+	products.add(pw1);
+	products.add(pw2);
+
+3. Create  a list<SelectOption> and create SelectOption with
+
+	prodName as label and prodcode value from the product list
+
+List<SelectOption> options=new List<SelectOption>();
+
+ for(ProdWrapper p: products){
+	
+	SelectOption sp=new SelectOption(p.prodCode,p.prodName);
+	options.add(sp);
+
+ }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
