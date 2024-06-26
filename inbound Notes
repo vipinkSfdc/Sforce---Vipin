@@ -1,0 +1,118 @@
+Messaging.InboundEmailHandler:
+===============================
+
+1. This is a interface which need to implemented to handle the 
+   inbound emails 
+
+2. Any class which is implementing this interface has to define a
+    handleInboundEmail method
+
+Syntax :
+
+Messaging.InboundEmailResult handleInboundEmail(Messaging.InboundEmail,Messaging.InboundEnvelope)
+
+3.Messaging.InboundEmailResult :
+
+  a.This is a predefined apex class which contains a boolean variable success
+
+	if we set success=true email is handled successfully
+
+	if we set success =false email is not handled successfully
+
+4.Messaging.InboundEmail:
+  
+  a.This is a predefined Apex class which contains the values of email what 
+    we recevied as inbound
+
+	1.fromAddress
+	2.fromName
+	3.toAddress
+	4.subject
+	5.plainTextBody
+
+5. Messaging.InboundEnvelope
+
+  a. This is a predefine Apex class which contains to and from address of the 
+     inbound email
+6. Create a EmailService 
+	setup
+	 |----Build
+		|----Develop
+			|-----Email services
+				    |----------New Email service 
+
+	step 1: Email service Name 
+
+	Step 2: Choose the Apex 
+	
+	Step 3: Enter the email Address from which inbound should be accepted
+	
+	Step 4: Enable Active checkbox
+
+	Step 5: Specify Error handling
+
+	Step 6: Save and generate email Address
+
+	Step 7: Save 
+
+Example 1:
+Create a lead based on the Inbound email recevied
+
+public class InboundExample implements Messaging.InboundEmailHandler {
+    public Messaging.InboundEmailResult handleInboundEmail(Messaging.InboundEmail email,Messaging.InboundEnvelope env){
+        Messaging.InboundEmailResult result=new Messaging.InboundEmailResult();
+        try{
+            Lead mylead=new Lead();
+            mylead.lastName=email.fromName;
+            mylead.Email=email.fromAddress;
+            mylead.Company='CapitalInfo';
+            mylead.Status='open- not contacted';
+            mylead.title=email.subject;
+            mylead.LeadSource='Email';
+            mylead.Description=email.plainTextBody;
+            insert mylead;
+            result.success=true;
+        }catch(Exception e){
+            result.success=false;
+        }
+        return result;
+    }
+}
+
+
+Example 2: 
+
+ Create a new case based on the email what we recevied.
+
+
+public class InboundCaseExample implements Messaging.InboundEmailHandler {
+    public Messaging.InboundEmailResult handleInboundEmail(Messaging.InboundEmail email,Messaging.InboundEnvelope env){
+        Messaging.InboundEmailResult result=new Messaging.InboundEmailResult();
+        try{
+            Case c=new Case();
+            c.subject=email.subject;
+            c.Status='New';
+            c.Origin='Email';
+            c.Priority='Normal';
+            c.Description=email.plainTextBody;
+            insert c;
+            result.success=true;
+        }catch(Exception e){
+            result.success=false;
+        }
+        return result;
+    }
+
+}
+
+
+
+
+
+
+
+
+
+
+
+	
