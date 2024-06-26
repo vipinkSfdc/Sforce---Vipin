@@ -1,0 +1,222 @@
+Role :
+
+	CEO
+	  |
+	  |----VP  Life
+	  |	|----Regional Manager
+	  |	|		|------Sales Manager Life
+	  |					|-----Sales Executives
+	  |
+	  |-----VP Health 
+		|
+		|---Regional Manager
+				|-----Sales Manager health
+						|-----Sales Executives
+
+Create one profile : Life Profile  :
+
+		     License 	   :Salesforce
+
+
+Create two new users :
+
+	userName 	Role	 		License			profile
+	------------------------------------------------------------------------------
+	Satish		Salesmanager health	Salesforce		System Admin
+
+	kiran		Slaes manager Life	Salesforce		Life Profile
+
+	Kavya		Sales Executives	Salesforce Platorm
+
+	
+Create Queue  on Lead :
+
+	Name 	   Memebers 
+---------------------------------
+   Life queue	   Role : VP sales Life and Sub 
+
+   Health Queue	   Role : VP Sales Health and sub
+
+
+=======================================================================================
+Object :Lead : 
+=======================================================================================
+
+	1. Create following custom fields 
+
+		Name		DataType	Options
+		-----------------------------------------
+		1. Status	PickList	Qualified, General
+
+		2. Product 	PickList	Life ,health
+
+		3. LeadQuality	Formule		Give star rating based on lead score
+
+		4. Lead Score 	Number	
+
+		5. Branch	Pick List	SRNagar,LBNagar
+
+		6. Branch Code  Text			
+
+
+1. Formule Fields : Lead Quality
+
+	If Lead Score > 80  : show 5 star image 
+
+	if Lead Score > 60 : Show 4 Star image 
+
+	if Lead score > 40 : Show 3 star Image 
+
+	if Lead score > 20 : Show 2 star image 
+
+	if Lead score > 10 : show 1 star image 
+
+
+Custom settings: 
+
+	Custom Setting : 
+
+	Object Name : LeadData 
+	
+	Field 	    : Active  :	
+
+	Type	    : Hierarchial
+
+	Values	    : Default Value : false 
+
+		      LifeProfile   : true
+
+
+Custom Settings :
+
+	Object Name : BranchData
+	
+	Type	    : List 
+
+	Fields	    : Name 	: StandardField
+
+		    : BrachCode : Text
+
+
+
+Trigger :
+
+Object	: Lead
+
+Event	: before insert
+
+1. Check the profile of the user who created the Lead 
+  
+   if users profile is  LifeProfile then run the trigger 
+
+
+1.Check are there any duplicate lead records already exiting  based on
+
+		Lastname,firstName,company,product
+
+ 
+    a. If there are no are duplicate records then  calculare the lead score 
+
+	Field Name	Entered		Not Entered
+
+	LastName	10		0
+
+	FirstName	10		0
+	
+	Email		10		0
+
+	Phone		10		0
+
+	Product		20		0
+
+	Industry	20		20
+
+    b. if the Product is Life assign the owner as Life queue
+
+    c. Set status as 'genral'
+
+2. if there is duplicate record found 
+	
+	a. Check the status of the  lead and if the lead status is Qualified 
+		
+		1. If lastactivity Date is more than three days then reassign the 
+		   owner of the record as life queue
+
+		2. If lastactivity date is more than 20 days then reassign the owner
+		  of the record as life queue and set the status as 'General'
+
+	b.If the lead status of the duplicate record  is General
+
+		
+	  1. If the last activity date is more than three days then reassign the 
+	     owner as life queue 
+
+	  2. if the last activity date is less than three days and user is a owner
+	    then the email to the user 
+
+3. Fetch the branch code from customsetting and assign it to branchcode		
+
+=========================================================================================		 
+
+For Reference : Check this code  
+
+1.Collect the data  from the LifeDate customsetting   and check the status of Active 
+
+for the current user 
+
+if active is true then run the logic
+
+user u=[select id ,profileid from user where id=userInfo.getuserId()];
+
+        LifeData__c life=LifeDate__c.getInstance(u.profileId);
+
+            if(life.active__C ==true){
+
+	     }	
+
+2. Get the Queue Id of the Life queue 
+
+	Group g=[select id from Group where Type='Queue' Name='LifeQueue' ]
+
+3. Create a for loop and check are there  any duplicate records exits 
+
+	if they dont exits 
+
+ Integer count=0;
+                if(l.firstName!='' &&l.firstName!=null)
+                    count=count+10;
+                if(l.lastname!='' && l.lastname!=null)
+                    count=count+10;
+                if(l.Email!='' && l.Email!=null)
+                    count=count+10;
+                if(l.phone!='' && l.phone!=null)
+                    count=count+10;
+                if(l.product__c!='' && l.product__c!=null)
+                    count=count+20;
+                if(l.industry!='' && l.industry!=null)
+                    count=count+20;
+                l.Lead_Score__c=count;
+
+
+and assign the owner as Life queue
+
+l.Status__c='General';
+                l.ownerId=g.id;	
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+					
+		
